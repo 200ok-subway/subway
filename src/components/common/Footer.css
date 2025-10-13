@@ -1,0 +1,12 @@
+.footerbox{
+  width:100vw;
+  height: 95px;
+  background-color: #2C313B;
+  color:white;
+  position: fixed;
+  bottom: 0;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

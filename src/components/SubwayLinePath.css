@@ -1,0 +1,7 @@
+.subway-line-path {
+  height:100hw;
+}
+
+.subway-line-path > img {
+  width:100%;
+}

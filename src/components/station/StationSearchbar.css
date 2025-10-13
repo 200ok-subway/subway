@@ -1,0 +1,22 @@
+
+.SubwayStationList-searchbar .subway-searchbar_input {
+  width: 100%;
+  height: 60px;
+  padding: 0 30px;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  outline: none;
+  font-size: 15px;
+  color: #333;
+}
+
+.SubwayStationList-searchbar .subway-searchbar_input:focus {
+  outline: none;
+  box-shadow: none;
+  border: none;
+}
+
+.SubwayStationList-searchbar .subway-searchbar_input::placeholder {
+  color: #9aa3ad;
+}
