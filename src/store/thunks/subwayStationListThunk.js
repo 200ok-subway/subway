@@ -58,7 +58,7 @@ const stationIndex = createAsyncThunk(
      return {
       listPresent, // 전체 원본 데이터
       nameList, // 1~9호선 정규화 리스트
-   };  
+    };  
   }
 );
 

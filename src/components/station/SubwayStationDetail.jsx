@@ -12,7 +12,27 @@ import stationNameDict from "../../data/stationNameDict.js";
 
 /* ========== 유틸 ========== */
 
-// "01호선" → "1호선"
+
+
+// **bj T 코드 리뷰 -> 참고하세요 디테일 수정하세요오오오옹
+// useEffect(() => {
+//   // 실시간 도착정보 조회
+//   // 첫차 막차 정보 조회
+//   // 파싱한 역정보
+//   // 인터벌
+
+//   return 인터벌삭제
+// }, []);
+
+
+
+
+/**
+ * 호선명을 정규화합니다. 예) "01호선" → "1호선", "2호선" → "2호선", "경의선" → "경의선"
+ * 
+ * @param {string} v - 호선명
+ * @returns {string} - 정규화된 호선명
+ */
 const normalizeLine = (v) => {
   const s = String(v ?? "").trim();
   const m = s.match(/^0?([1-9])호선$/);

@@ -10,11 +10,12 @@ function SubwayStationList() {
   const dispatch = useDispatch();
 
   const stationList = useSelector(state => state.subwayStation.nameList);
-  const search = useSelector(state => state.subwayStation.searchStationNm);
+  // const search = useSelector(state => state.subwayStation.searchStationNm);
 
   useEffect(() => { 
-    dispatch(stationIndex(search));   //검색어로 조회
-  }, [dispatch, search]);
+    dispatch(stationIndex(''));   //검색어로 조회
+  // }, [dispatch, search]);
+  }, []);
 
   return (
     <>
