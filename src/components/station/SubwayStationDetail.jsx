@@ -195,22 +195,6 @@ function SubwayStationDetail() {
         <div className="detail-colorbar" />
       </div>
 
-        {/* 칩만 표시 */}
-        <div className="detail-contnetswrap">
-          <div className="detail-chiprow">
-            {lineOptions.map((ln) => (
-              <button
-                key={ln}
-                type="button"
-                className={`detail-linename ${selectedLine===ln ? "active" : ""}`}
-                onClick={()=>setSelectedLine(ln)}
-              >
-                {ln}
-              </button>
-            ))}
-          </div>
-        </div>
-
       {/* 상/하행 섹션 */}
       <div className="detail-sections">
         {/* 상행 */}
