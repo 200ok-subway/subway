@@ -11,10 +11,10 @@ const initialState = {
   // 첫/막차
   firstUp: [],
   firstDown: [],
-  dow: 1,
+  dow: 1, // 1: 평일, 2: 주말, 3: 공휴일 // 기본값은 평일 
   line: "",
   loadingFirstLast: false,
-  errorFirstLast: null,
+  errorFirstLast: null, // 평일, 주말, 공휴일
 };
 
 const subwayStationDetailSlice = createSlice({

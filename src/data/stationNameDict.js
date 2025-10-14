@@ -54,7 +54,7 @@ export default [
     lineKoran: "1호선"
   },
   {
-    subwayId: "1001",
+    subwayId: "1001", 
     statnId: "1001000109",
     statnNm: "가능",
     lineKoran: "1호선"
