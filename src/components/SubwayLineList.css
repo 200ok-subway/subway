@@ -1,0 +1,34 @@
+.subway-line-path__wrap{
+  width:100vw;
+  background-color: aqua;
+  
+}
+
+.subway-line-path__search-section{
+  background-color: white;
+  width:44%;
+  height:200px;
+  margin-left:20px;
+  margin: 20px auto;
+  min-width: 500px;
+  border-radius: 15px;
+}
+.subway-line-path__map-section{
+  width:44%;
+  height:500px;
+  margin: 20px auto;
+  min-width: 500px;
+  border-radius: 15px;
+  background-color: aliceblue;
+
+  
+}
+@media (min-width: 1000px) {
+  .subway-line-path__wrap{
+    width:100vw;
+    display: flex;
+    margin: 20px;
+  }
+
+  
+}
