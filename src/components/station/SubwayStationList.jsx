@@ -1,4 +1,3 @@
-// src/pages/SubwayStationList.jsx
 import './SubwayStationList.css';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';

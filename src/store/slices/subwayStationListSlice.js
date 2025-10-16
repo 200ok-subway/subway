@@ -42,5 +42,8 @@ const subwayStationListSlice = createSlice({
   },
 });
 
-export const { setSearch } = subwayStationListSlice.actions;
+export const {
+  setSearch
+} = subwayStationListSlice.actions;
+
 export default subwayStationListSlice.reducer;
