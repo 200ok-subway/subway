@@ -1,74 +1,49 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  Map,
-  MapMarker,
-  CustomOverlayMap,
-  MarkerClusterer,
-  useKakaoLoader,
-} from "react-kakao-maps-sdk";
+import { useEffect, useState } from "react";
+import { Map, MapMarker, CustomOverlayMap, useKakaoLoader } from "react-kakao-maps-sdk";
 import { useNavigate } from "react-router-dom";
 import "./SubwayLineList.css";
-
-//유틸
-import {
-  normalizeBigdataToStations,
-  findStationByName,
-} from "../../utils/listSubwayGeom1to9Util.js";
-import { listPresentAndNameList } from "../../utils/subwaySearchUtils.js";
+import { useDispatch } from "react-redux";
 import listGeom from "../../data/listGeom.js";
+import { get1To9LineOnOrigin } from "../../utils/listSubwayGeom1to9Util.js";
 
-export default function SubwayLineList({ level = 5, useCluster = true }) {
+export default function SubwayLineList() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  // Kakao SDK
-  const appkey = import.meta.env.VITE_KAKAO_APP_KEY;
-  useKakaoLoader({ appkey, libraries: ["services", "clusterer"] });
+  useEffect(() => {
+    // dispatch(getSubwayList()); // 원래는 API로 실시간으로 받아오려했으나, CORS 대응이 안되어 있어 불가
+  }, [dispatch]);
 
-  // 검색어
-  const [q, setQ] = useState("");
+  // ---------- kakao MAp ----------
+  const appkey = import.meta.env.VITE_KAKAO_APP_KEY; // kakao app key
+  useKakaoLoader({ appkey, libraries: ["services", "clusterer"] }); // kakao map loder
+  const [coordinate, setCoordinate] = useState({lat: 37.554648, lng: 126.970607}); // 좌표 스테이트(초기값 서울역)
+  const MAP_LAVEL = 5; // kakao map 확대(초기값 5)
 
-  // 좌표: 로컬 JSON만 사용
-  const stations = useMemo(() => normalizeBigdataToStations(listGeom), []);
+  // ---------- kakao Marker ----------
+  const [markerItem, setMarkerItem] = useState(null);
 
-  // 왼쪽 리스트: 유틸로 필터 (로컬만)
-  const displayList = useMemo(
-    () => listPresentAndNameList(listGeom, q).nameList,
-    [q]
-  );
+  // 검색창에서 선택한 역정보 마커와 좌표 셋팅
+  function selectStation(item) {
+    setMarkerItem(item);
+    setCoordinate({lat: item.convY,lng: item.convX})
+  }
 
-  const mapRef = useRef(null);
-  const [searchMarker, setSearchMarker] = useState(null);
-  const [infoOpen, setInfoOpen] = useState(false);
-  const lastAlertedRef = useRef("");
+  // ---------- search ----------
+  // const stationList = useSelector(state => state.subwayLineList.stationList);
+  const stationList = get1To9LineOnOrigin(listGeom);
+  const [searchList, setSearchList] = useState([]); // 검색 결과 배열
+  
+  // 검색 처리 함수
+  function searchStationList(e) {
+    const searchList = stationList.filter(item => item.stnKrNm.includes(e.target.value.trim()));
+    dispatch(setSearchList(searchList));
+  }
 
-  // 기본 중심점
-  const initialCenter = useMemo(() => {
-    const s = findStationByName(stations, "서울역");
-    return s ? { lat: s.lat, lng: s.lng } : { lat: 37.554648, lng: 126.970607 };
-  }, [stations]);
-
-  // 리스트 클릭 → 지도 이동 + 마커
-  const focusStation = (name, line) => {
-    const kakao = window.kakao;
-    if (!kakao || !mapRef.current) return;
-
-    const hit = findStationByName(stations, name);
-    if (hit) {
-      const pos = { lat: hit.lat, lng: hit.lng };
-      mapRef.current.setCenter(new kakao.maps.LatLng(pos.lat, pos.lng));
-      mapRef.current.setLevel(4);
-      setSearchMarker({ pos, title: hit.name, line: hit.line || line || "" });
-      setInfoOpen(true);
-      lastAlertedRef.current = "";
-      return;
-    }
-    setInfoOpen(false);
-    setSearchMarker(null);
-    if (lastAlertedRef.current !== name) {
-      lastAlertedRef.current = name;
-      window.alert("데이터에 해당 역이 없습니다.");
-    }
-  };
+  // ---------- redirect ----------
+  function goToStationDetail(stnKrNm) {
+    navigate(`/station/${stnKrNm}`);
+  }
 
   return (
     <div className="subway-container">
@@ -81,110 +56,47 @@ export default function SubwayLineList({ level = 5, useCluster = true }) {
 
         <div className="subway-search">
           <input
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
+            onChange={searchStationList}
             placeholder="정류장명을 입력해주세요"
           />
-          <button onClick={() => { /* 로컬 모드: 버튼은 디바운스 없이 즉시 반영됨 */ }}>
-            검색
-          </button>
         </div>
 
-        <div className="subway-results">
-          {(!displayList || displayList.length === 0) && (
-            <div className="subway-empty">예) "서울" → 서울역, 서울대입구</div>
-          )}
-          {displayList?.map((it, idx) => (
-            <div
-              key={`${it.name}-${idx}`}
-              className="subway-item"
-              onClick={() => focusStation(it.name, it.line)}
-              title={`${it.name} • ${it.line}`}
-            >
-              <div className="subway-item-name">{it.name}</div>
-              <div className="subway-item-line">{it.line}</div>
-            </div>
-          ))}
+        <div className={`subway-results ${searchList.length === 0 && 'subway-results-items-center'}`}>
+          {
+            searchList.length === 0 && <div className="subway-empty">예) "서울" → 서울역, 서울대입구</div>
+          }
+          {
+            searchList.length > 0 && searchList.map((item, idx) => {
+              return (
+                <div className="subway-item" key={`${item.outStnNum}-${idx}`} onClick={() => { selectStation(item) }}>
+                  <div className="subway-item-name">{item.stnKrNm}</div>
+                  <div className="subway-item-line">{item.lineNm}</div>
+                </div>
+              )
+            })
+          }
         </div>
       </aside>
-
-      {/* ---------- Right: 지도 ---------- */}
       <section className="subway-map">
         <Map
-          center={searchMarker?.pos || initialCenter}
-          level={level}
-          style={{ width: "100%", height: "clamp(260px, 48vh, 640px)" }}
-          onCreate={(map) => (mapRef.current = map)}
+          center={coordinate}
+          style={{ width: "100%", height: "400px" }}
+          level={MAP_LAVEL}
         >
-          {/* 검색 마커 */}
-          {searchMarker?.pos && (
-            <>
-              <MapMarker
-                position={searchMarker.pos}
-                onClick={() => setInfoOpen((v) => !v)}
-                title={searchMarker.title}
-              />
-              {infoOpen && (
-                <CustomOverlayMap position={searchMarker.pos} yAnchor={1.35}>
-                  <div
-                    className="subway-overlay clickable"
-                    onClick={() =>
-                      navigate(
-                        `/line-list?name=${encodeURIComponent(searchMarker.title || "")}` +
-                          `&line=${encodeURIComponent(searchMarker.line || "")}`
-                      )
-                    }
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        navigate(
-                          `/line-list?name=${encodeURIComponent(searchMarker.title || "")}` +
-                            `&line=${encodeURIComponent(searchMarker.line || "")}`
-                        );
-                      }
-                    }}
-                  >
-                    <div className="subway-ov-title">{searchMarker.title}</div>
-                    {searchMarker.line && (
-                      <div className="subway-ov-addr">{searchMarker.line}</div>
-                    )}
+          {
+            markerItem && (
+              <>
+                <MapMarker position={coordinate} onClick={() => { goToStationDetail(markerItem.stnKrNm) }} />
+                <CustomOverlayMap position={coordinate}>
+                  <div className="subway-overlay clickable" onClick={() => { goToStationDetail(markerItem.stnKrNm) }}>
+                      <div className="subway-ov-title">{markerItem.stnKrNm} {markerItem.lineNm}</div>
                   </div>
                 </CustomOverlayMap>
-              )}
-            </>
-          )}
-
-          {/* 1~9호선 역 마커 */}
-          {stations.length > 0 &&
-            (useCluster ? (
-              <MarkerClusterer averageCenter minLevel={6}>
-                {stations.map((s) => (
-                  <MapMarker
-                    key={s.id}
-                    position={{ lat: s.lat, lng: s.lng }}
-                    title={`${s.name} (${s.line})`}
-                    onClick={() => focusStation(s.name, s.line)}
-                  />
-                ))}
-              </MarkerClusterer>
-            ) : (
-              stations.map((s) => (
-                <MapMarker
-                  key={s.id}
-                  position={{ lat: s.lat, lng: s.lng }}
-                  title={`${s.name} (${s.line})`}
-                />
-              ))
-            ))}
+              </>
+            )
+          }
         </Map>
       </section>
     </div>
   );
 }
-
-
-
-
-
-

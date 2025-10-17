@@ -67,8 +67,16 @@
   border-top: 1px solid #f3f4f6;
   padding-top: 8px;
   max-block-size: 40vh;
+  height: 285px;
   overflow: auto;
 }
+
+.subway-results-items-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .subway-empty {
   padding: 18px 8px;
   color: #9ca3af;
@@ -111,6 +119,9 @@
   max-width: 240px;
   font-size: 13px;
   line-height: 1.4;
+  /* 커스텀 오버레이 위치 조절 위해 삽입 */
+  position: relative; 
+  bottom: 60px;
 }
 .subway-ov-title {
   font-weight: 700;
