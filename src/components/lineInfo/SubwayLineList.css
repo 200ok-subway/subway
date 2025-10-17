@@ -1,0 +1,135 @@
+/* 컨테이너: 넓으면 2열, 좁으면 자동 1열(리스트 위 / 지도 아래) */
+.subway-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+  width: 100%;
+  padding: 16px;
+  box-sizing: border-box;
+  align-items: start; /* 각 칸 높이 독립 */
+}
+
+/* Left */
+.subway-left {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 12px;
+  display: grid;
+  grid-template-rows: auto auto auto;
+  gap: 10px;
+  box-sizing: border-box;
+}
+
+.subway-tabs {
+  display: flex;
+  gap: 8px;
+}
+.subway-tab {
+  flex: 0 0 auto;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  font-weight: 600;
+  cursor: pointer;
+}
+.subway-tab.active {
+  background: #e8f0ff;
+  border-color: #c7d2fe;
+}
+.subway-tab:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.subway-search {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+}
+.subway-search input {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  outline: none;
+}
+.subway-search button {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+}
+
+/* 리스트: 내용만큼만 커지되 최대 40vh까지만(넘치면 스크롤) */
+.subway-results {
+  border-top: 1px solid #f3f4f6;
+  padding-top: 8px;
+  max-block-size: 40vh;
+  overflow: auto;
+}
+.subway-empty {
+  padding: 18px 8px;
+  color: #9ca3af;
+  text-align: center;
+}
+.subway-item {
+  padding: 10px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.subway-item:hover {
+  background: #f3f4f6;
+}
+.subway-item-name {
+  font-weight: 700;
+}
+.subway-item-line {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* Right */
+.subway-map {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+
+/* Overlay */
+.subway-overlay {
+  padding: 10px 12px;
+  background: #fff;
+  color: #000;
+  border-radius: 8px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  max-width: 240px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.subway-ov-title {
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.subway-ov-addr {
+  opacity: 0.85;
+}
+
+.subway-ov-link {
+  margin-top: 8px;
+  padding: 6px 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.subway-ov-link:hover { background: #f3f4f6; }
+
+.clickable { cursor: pointer; }

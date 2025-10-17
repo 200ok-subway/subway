@@ -51,7 +51,7 @@ function InstallPrompt() {
        (deferredPrompt && dialFlg) && 
        (
         <div className="prompt-container">
-            <p className="prompt-info">SUBWAY</p>
+            <p className="prompt-info">SEOULWAY</p>
             <button className="prompt-btn" onClick={handleInstall} type="button"> DownLoad now </button>
         </div>
        )
