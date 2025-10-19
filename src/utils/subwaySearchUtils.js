@@ -7,6 +7,16 @@ export const lineMinusZero = (v) => {
   return m ? `${m[1]}호선` : x;
 };
 
+
+/** 역명 정규화: "서울역(1호선)" → "서울" */
+export const minusStationNameYeok = (v) =>
+  String(v ?? "")
+    .toLowerCase()
+    .replace(/\s+/g, "")
+    .replace(/\([^)]*\)/g, "")
+    .replace(/역$/, "");
+
+
 /** 토큰 확장: "3","03","3호","3호선" → ["3호선","03호선","3","03"] */
 export const expandToken = (t) => {
   const x = String(t ?? "").toLowerCase().trim();

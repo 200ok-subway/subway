@@ -28,10 +28,6 @@ const router = createBrowserRouter([
           element: <StationSearchbar />
         },
         {
-          path: 'stationdetail/:name/:line',
-          element: <SubwayStationDetail />
-        },
-        {
           path: 'stations/:stationId',
           element: <SubwayStationDetail />
         },

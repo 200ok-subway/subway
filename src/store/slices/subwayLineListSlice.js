@@ -8,7 +8,7 @@ const initialState = {
 };
 
 const subwayLineListSlice = createSlice({
-  name: "subwayLine",
+  name: "subwayLineList",
   initialState,
   reducers: {},
   extraReducers: (builder) => {

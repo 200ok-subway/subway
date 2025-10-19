@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-export const getSubwayList = createAsyncThunk(
+  const getSubwayList = createAsyncThunk(
   'subwayLineListSlice/getSubwayList',
   async (ars, thunkAPI) => {
     try {
@@ -18,3 +18,5 @@ export const getSubwayList = createAsyncThunk(
     }
   }
 );
+
+export { getSubwayList };

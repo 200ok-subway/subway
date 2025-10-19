@@ -15,7 +15,7 @@ function App() {
         <Outlet/>
       </main>
       <Footer/>
-      <ScrollRestoration></ScrollRestoration>
+      <ScrollRestoration/>
     </>
   )
 }
