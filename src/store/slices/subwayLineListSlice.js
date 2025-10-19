@@ -4,6 +4,7 @@ import { get1To9LineOnOrigin } from "../../utils/listSubwayGeom1to9Util.js";
  
 const initialState = {
   loading: false,
+  error: null,
   stationList: [], // 전체 역 리스트
 };
 

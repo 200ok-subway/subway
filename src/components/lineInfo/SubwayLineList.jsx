@@ -20,7 +20,7 @@ export default function SubwayLineList() {
   const appkey = import.meta.env.VITE_KAKAO_APP_KEY; // kakao app key
   useKakaoLoader({ appkey, libraries: ["services", "clusterer"] }); // kakao map loder
   const [coordinate, setCoordinate] = useState({lat: 37.554648, lng: 126.970607}); // 좌표 스테이트(초기값 서울역)
-  const MAP_LAVEL = 5; // kakao map 확대(초기값 5)
+  const MAP_LEVEL = 5; // kakao map 확대(초기값 5)
 
   // ---------- kakao Marker ----------
   const [markerItem, setMarkerItem] = useState(null);
@@ -77,8 +77,6 @@ export default function SubwayLineList() {
     return <SubwayLineDetail />; // 디테일 컴포넌트 자체가 useSearchParams로 name/line 읽음
   }
 
-  
-
   return (
     <div className="subway-container">
       {/* ---------- Left: 검색 패널 ---------- */}
@@ -91,7 +89,7 @@ export default function SubwayLineList() {
         <div className="subway-search">
           <input
             onChange={searchStationList}
-            placeholder="정류장명을 입력해주세요"
+            placeholder="역명을 입력해주세요"
           />
         </div>
 
@@ -116,7 +114,7 @@ export default function SubwayLineList() {
 
       {/* ---------- Map ---------- */}
       <section className="subway-map">
-        <Map center={coordinate} style={{ width: "100%", height: "400px" }} level={MAP_LAVEL}>
+        <Map center={coordinate} style={{ width: "100%", height: "400px" }} level={MAP_LEVEL}>
           {markerItem && (
             <>
               <MapMarker position={coordinate} onClick={() => goToStationDetail(markerItem)} />

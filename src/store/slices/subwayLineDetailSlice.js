@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getSubwayDetail } from "../thunks/subwayLineDetailThunk";
-import { getSubwayTelAndAddr } from "../thunks/subwayLineDetailTelAndAddrThunk";
+import { getSubwayDetail } from "../thunks/subwayLineDetailThunk.js";
+import { getSubwayTelAndAddr } from "../thunks/subwayLineDetailTelAndAddrThunk.js";
 
 const initialState = {
   loading: false,
@@ -19,28 +19,26 @@ const subwayLineDetailSlice = createSlice({
       .addCase(getSubwayDetail.pending, (state) => {
         state.loading = true;
       })
-      .addCase(getSubwayDetail.fulfilled, (state, { payload }) => {
+      .addCase(getSubwayDetail.fulfilled, (state, action) => {
         state.loading = false;
-        state.stationDetail = payload ?? [];
+        state.stationDetail =  (action.payload);
       })
       .addCase(getSubwayDetail.rejected, (state, action) => {
         state.loading = false;
         console.error(action.error);
-        state.error = action.payload ?? action.error?.message ?? null;
       })
 
       // 주소/전화 (신규)
       .addCase(getSubwayTelAndAddr.pending, (state) => {
         state.loading = true;
       })
-      .addCase(getSubwayTelAndAddr.fulfilled, (state, { payload }) => {
+      .addCase(getSubwayTelAndAddr.fulfilled, (state, action) => {
         state.loading = false;
-        state.stationAddrTel = payload ?? [];
+        state.stationAddrTel = (action.payload);
       })
       .addCase(getSubwayTelAndAddr.rejected, (state, action) => {
         state.loading = false;
         console.error(action.error);
-        state.error = action.payload ?? action.error?.message ?? null;
       });
   },
 });
