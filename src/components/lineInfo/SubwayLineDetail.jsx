@@ -1,10 +1,10 @@
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import "./subwayLineDetail.css";
 import { useDispatch, useSelector } from "react-redux";
-import { useSearchParams } from "react-router-dom";    
+import { useParams } from "react-router-dom";    
 import { getSubwayDetail } from "../../store/thunks/subwayLineDetailThunk.js";
 import { getSubwayTelAndAddr } from "../../store/thunks/subwayLineDetailTelAndAddrThunk.js";
-import { lineMinusZero, minusStationNameYeok } from "../../utils/subwaySearchUtils.js";
+import { removeParenAndremoveYeok, removeParenAndMinusZero } from "../../utils/subwaySearchUtils.js";
 
 /* 'Y'면 'Y', 그 외/빈값은 'N' */
 const YN = (v) => (String(v ?? "").trim().toUpperCase() === "Y" ? "Y" : "N");
@@ -16,80 +16,46 @@ const a11yCls = (v) => (isY(v) ? "ok" : "no");
 
 export default function SubwayLineDetail() {
   const dispatch = useDispatch();
-  const [searchParams] = useSearchParams();     // /station/:stnKrNm 대신 쿼리 스트링 읽기
-  const qName = searchParams.get("name") || "";                    // 예: 샛강
-  const qLine = searchParams.get("line") || "";                    // 예: 9호선
 
-  const loading =
-    useSelector((s) => s.subwayLineDetail?.loading ?? s.subwayLine?.loading) ?? false;
-  const error =
-    useSelector((s) => s.subwayLineDetail?.error ?? s.subwayLine?.error) ?? null;
+  const { stnKrNm, lineNm } = useParams();
+   const loading = useSelector((s) => s.subwayLineDetail?.loading ?? false);
+   const error   = useSelector((s) => s.subwayLineDetail?.error ?? null);
 
   // 시설 API rows  
-  const rows =
-    useSelector(
-      (s) => s.subwayLineDetail?.stationDetail ?? s.subwayLine?.stationDetail
-    ) ?? [];
-
-
+  const rows = useSelector(s => s.subwayLineDetail.stationDetail);
   // 주소/전화 API rows
-  const addrRows =
-    useSelector(
-      (s) => s.subwayLineDetail?.stationAddrTel ?? s.subwayLine?.stationAddrTel
-    ) ?? [];
-
+  const addrRows = useSelector(s => s.subwayLineDetail.stationAddrTel);
 
   useEffect(() => {
     if (!rows.length) dispatch(getSubwayDetail());
     if (!addrRows.length) dispatch(getSubwayTelAndAddr());
   }, [dispatch, rows.length, addrRows.length]);
 
-  
-  // 편의시설 부분 포함 매칭 (정규화 X)
-  const current = useMemo(() => {
-    if (!rows.length || !qName) return null;
-    const nq = minusStationNameYeok(qName); // 역명 정규화: "서울역(1호선)" → "서울"
-    const nline = qLine ? lineMinusZero(qLine) : "";
-    return (
-      rows.find((r) => {
-        const name = minusStationNameYeok(r?.STATION_NAME ?? "");
-        const line = lineMinusZero(r?.LINE ?? "");
-        const nameOk = name.includes(nq) || nq.includes(name);
-        const lineOk = nline ? line.includes(nline) : true;
-        return nameOk && lineOk;
-      }) ?? null
-    );
-  }, [rows, qName, qLine]);
+  // 정규화된 역명/호선명
+  const detailName = removeParenAndremoveYeok(stnKrNm);
+  const detailLine = removeParenAndMinusZero(lineNm);
 
+  // 편의시설 부분 포함 매칭
+  const facility = rows.find((r) =>
+    removeParenAndremoveYeok(r?.STATION_NAME ?? "") === detailName &&
+    removeParenAndMinusZero(r?.LINE ?? "") === detailLine
+  ) ?? null;
   // 주소/전화 쪽에서도 동일 방식으로 매칭
-    const currentAddr = useMemo(() => {
-    if (!addrRows.length || !qName) return null;
-    const nq = minusStationNameYeok(qName);
-    const nline = qLine ? lineMinusZero(qLine) : "";
-    return (
-      addrRows.find((r) => {
-        const name = minusStationNameYeok(r?.SBWY_STNS_NM ?? "");
-        const line = lineMinusZero(r?.SBWY_ROUT_LN ?? "");
-        const nameOk = name.includes(nq) || nq.includes(name);
-        const lineOk = nline ? line.includes(nline) : true;
-        return nameOk && lineOk;
-      }) ?? null
-    );
-  }, [addrRows, qName, qLine]);
-
+  const telAddr = addrRows.find((r) =>
+    removeParenAndremoveYeok(r?.SBWY_STNS_NM ?? "") === detailName &&
+    removeParenAndMinusZero(r?.SBWY_ROUT_LN ?? "") === detailLine
+  ) ?? null;
 
   // 화면 표기용 값
-  const c = current ?? {};
-  const stationName =
-   (c.STATION_NAME ?? currentAddr?.SBWY_STNS_NM ?? qName) || "역명 미상";
-  const rawLine = c.LINE ?? currentAddr?.SBWY_ROUT_LN ?? qLine ?? "";
-  const line = rawLine ? lineMinusZero(rawLine) : "-";
+  const c = facility ?? {};
+  const stationName = detailName || c.STATION_NAME || telAddr?.SBWY_STNS_NM || "역명 미상";
+  const line = detailLine || "-"; // 이미 정규화된 "N호선"
 
   // 역 정보 3칸: 지번/도로명/연락처 <- 원래는 (역명/호선/역코드)
-  const oldAddr = currentAddr?.OLD_ADDR || "-";
-  const roadAddr = currentAddr?.ROAD_NM_ADDR || "-";
-  const telno = currentAddr?.TELNO || "-";
-
+  const oldAddr  = telAddr?.OLD_ADDR     || "-";
+  const roadAddr = telAddr?.ROAD_NM_ADDR || "-";
+  const telno    = telAddr?.TELNO        || "-";
+  
     return (
     <div className="line-detail">
       {/* 타이틀 */}
@@ -196,8 +162,8 @@ export default function SubwayLineDetail() {
         <p className="line-detail-muted">상세 위치/동선은 추후 제가 추가할 시 표기됩니다.</p>
       </section>
 
-      {/* 출구/지도 프리뷰 */}
-      <section className="line-detail-card">
+      {/* 출구/지도 프리뷰 다 작업 끝난 후 시간 되면 살펴보기*/}
+      {/* <section className="line-detail-card">
         <div className="line-detail-card-hd">출구 정보</div>
         <div className="line-detail-empty">출구 데이터 연동 전입니다.</div>
       </section>
@@ -205,10 +171,10 @@ export default function SubwayLineDetail() {
       <section className="line-detail-card line-detail-mapph">
         <div className="line-detail-card-hd">주변 정보</div>
         <div className="line-detail-mapph-map">Map Placeholder</div>
-      </section>
+      </section> */}
 
       {/* 매칭 실패 안내 */}
-      {!loading && !error && !current && (
+      {!loading && !error && !facility && (
         <section className="line-detail-card">
           <div className="line-detail-card-hd">알림</div>
           <div className="line-detail-empty">해당 역 데이터를 찾지 못했습니다.</div>

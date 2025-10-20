@@ -6,6 +6,7 @@ import SubwayStationDetail from "../components/station/SubwayStationDetail.jsx"
 import SubwayLineList from '../components/lineInfo/SubwayLineList.jsx'
 import StationSearchbar from "../components/station/StationSearchbar.jsx";
 import NotFound from "../components/errors/NotFound.jsx";
+import SubwayLineDetail from "../components/lineInfo/SubwayLineDetail.jsx";
 
 const router = createBrowserRouter([
     {
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
         {
           path: 'line-diagrams',
           element: <SubwayLineList />
+        },
+        {
+          path: 'line-diagrams/:stnKrNm/:lineNm',
+          element: <SubwayLineDetail />
         },
         {
           path: 'stationlist',

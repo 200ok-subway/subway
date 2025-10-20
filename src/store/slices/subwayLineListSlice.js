@@ -5,7 +5,8 @@ import { get1To9LineOnOrigin } from "../../utils/listSubwayGeom1to9Util.js";
 const initialState = {
   loading: false,
   error: null,
-  stationList: [], // 전체 역 리스트
+  stationList: [], // 전체  1~9호선 역 리스트
+  searchList: [],  // 검색 결과 리스트
 };
 
 const subwayLineListSlice = createSlice({
@@ -14,7 +15,7 @@ const subwayLineListSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getSubwayList.pending, (state, action) => {
+      .addCase(getSubwayList.pending, (state) => {
         state.loading = true;
       })
       .addCase(getSubwayList.fulfilled, (state, action) => {

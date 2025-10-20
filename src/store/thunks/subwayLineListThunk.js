@@ -7,7 +7,7 @@ import axios from "axios";
     try {
       const url = `${import.meta.env.VITE_BIG_DATA_API_BASE_URL}${import.meta.env.VITE_BIG_DATA_API_SERVICE_XY}`;
       const params = {
-        apikey: import.meta.env.VITE_BIG_DATA_OPEN_API,
+        apikey: import.meta.env.VITE_BIG_DATA_OPEN_API_KEY,
       }
       
       const res = await axios.get(url, {params});
