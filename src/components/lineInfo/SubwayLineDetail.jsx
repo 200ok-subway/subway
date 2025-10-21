@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";    
 import { getSubwayDetail } from "../../store/thunks/subwayLineDetailThunk.js";
 import { getSubwayTelAndAddr } from "../../store/thunks/subwayLineDetailTelAndAddrThunk.js";
-import { removeParenAndremoveYeok, removeParenAndMinusZero } from "../../utils/subwaySearchUtils.js";
+import { removeParenAndRemoveYeok, removeParenAndMinusZero } from "../../utils/subwaySearchUtils.js";
 
 /* 'Y'면 'Y', 그 외/빈값은 'N' */
 const YN = (v) => (String(v ?? "").trim().toUpperCase() === "Y" ? "Y" : "N");
@@ -32,17 +32,18 @@ export default function SubwayLineDetail() {
   }, [dispatch, rows.length, addrRows.length]);
 
   // 정규화된 역명/호선명
-  const detailName = removeParenAndremoveYeok(stnKrNm);
+  const detailName = removeParenAndRemoveYeok(stnKrNm);
   const detailLine = removeParenAndMinusZero(lineNm);
 
   // 편의시설 부분 포함 매칭
   const facility = rows.find((r) =>
-    removeParenAndremoveYeok(r?.STATION_NAME ?? "") === detailName &&
+    removeParenAndRemoveYeok(r?.STATION_NAME ?? "") === detailName &&
     removeParenAndMinusZero(r?.LINE ?? "") === detailLine
   ) ?? null;
+
   // 주소/전화 쪽에서도 동일 방식으로 매칭
   const telAddr = addrRows.find((r) =>
-    removeParenAndremoveYeok(r?.SBWY_STNS_NM ?? "") === detailName &&
+    removeParenAndRemoveYeok(r?.SBWY_STNS_NM ?? "") === detailName &&
     removeParenAndMinusZero(r?.SBWY_ROUT_LN ?? "") === detailLine
   ) ?? null;
 
@@ -161,17 +162,6 @@ export default function SubwayLineDetail() {
         </div>
         <p className="line-detail-muted">상세 위치/동선은 추후 제가 추가할 시 표기됩니다.</p>
       </section>
-
-      {/* 출구/지도 프리뷰 다 작업 끝난 후 시간 되면 살펴보기*/}
-      {/* <section className="line-detail-card">
-        <div className="line-detail-card-hd">출구 정보</div>
-        <div className="line-detail-empty">출구 데이터 연동 전입니다.</div>
-      </section>
-
-      <section className="line-detail-card line-detail-mapph">
-        <div className="line-detail-card-hd">주변 정보</div>
-        <div className="line-detail-mapph-map">Map Placeholder</div>
-      </section> */}
 
       {/* 매칭 실패 안내 */}
       {!loading && !error && !facility && (

@@ -24,7 +24,7 @@ const subwayLineListSlice = createSlice({
       })
       .addCase(getSubwayList.rejected, (state, action) => {
         state.loading = false;
-        console.error(action.error);
+        state.error = action.payload || action.error?.message || 'request failed';
       });
   },
 });

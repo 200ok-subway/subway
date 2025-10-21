@@ -3,7 +3,7 @@
  *  예) "미아(서울사이버대학)" -> "미아"
  *  SubwayLineList,Detail 등에서 역이름 정규화용
  */
-export const removeParenAndremoveYeok = (v) =>
+export const removeParenAndRemoveYeok = (v) =>
   String(v ?? "").replace(/\s*(\([^)]*\)\s*)+$/, "").replace(/역$/, "").trim();
 
 /** line용: 끝 괄호 제거 + "0N호선" -> "N호선" 정규화

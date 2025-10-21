@@ -37,6 +37,10 @@ const router = createBrowserRouter([
           element: <SubwayStationDetail />
         },
         {
+          path: 'stationdetail/:name/:line',
+          element: <SubwayStationDetail />
+        },
+        {
           path: '*',
           element: <NotFound/>
         }
