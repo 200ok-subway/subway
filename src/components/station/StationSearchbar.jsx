@@ -1,7 +1,8 @@
+// src/components/StationSearchbar.jsx
 import { useDispatch, useSelector } from "react-redux";
 import { setSearch } from "../../store/slices/subwayStationListSlice.js";
 import "./StationSearchbar.css";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react"; 
 
 function StationSearchbar({ onDraftChange }) { // (이전 답변에서 추가한 prop 유지)
   const dispatch = useDispatch();
@@ -19,7 +20,7 @@ function StationSearchbar({ onDraftChange }) { // (이전 답변에서 추가한
 
   const flush = (val) => dispatch(setSearch(val)); // 확정 검색어만 Redux로 반영
 
-  const handleChange = (e) => {
+  const handleChange = (e) => {                
     const v = e.target.value;
     setValue(v);
     onDraftChange?.(v); // draft를 부모로 전달해서 화면 필터 즉시 반영
@@ -50,16 +51,16 @@ function StationSearchbar({ onDraftChange }) { // (이전 답변에서 추가한
   useEffect(() => () => clearTimeout(timerRef.current), []);
 
   return (
-      <input
-        className="subway-searchbar_input"
-        type="text"
-        placeholder="역명으로 검색 (1~9호선)"
-        value={value}
-        onChange={handleChange}
-        onCompositionStart={onCompStart}
-        onCompositionEnd={onCompEnd}
-      />
-    );
-  }
-  
+    <input
+      className="subway-searchbar_input"
+      type="text"
+      placeholder="역명으로 검색 (1~9호선)"
+      value={value}
+      onChange={handleChange}  
+      onCompositionStart={onCompStart}
+      onCompositionEnd={onCompEnd}
+    />
+  );
+}
+
 export default StationSearchbar;

@@ -3,9 +3,10 @@ import App from "../App";
 import Main from "../components/Main.jsx";
 import SubwayStationList from "../components/station/SubwayStationList.jsx";
 import SubwayStationDetail from "../components/station/SubwayStationDetail.jsx"
-import SubwayLinePath from '../components/lineInfo/SubwayLinePath.jsx';
+import SubwayLineList from '../components/lineInfo/SubwayLineList.jsx'
 import StationSearchbar from "../components/station/StationSearchbar.jsx";
 import NotFound from "../components/errors/NotFound.jsx";
+import SubwayLineDetail from "../components/lineInfo/SubwayLineDetail.jsx";
 
 const router = createBrowserRouter([
     {
@@ -17,7 +18,11 @@ const router = createBrowserRouter([
         },
         {
           path: 'line-diagrams',
-          element: <SubwayLinePath />
+          element: <SubwayLineList />
+        },
+        {
+          path: 'line-diagrams/:stnKrNm/:lineNm',
+          element: <SubwayLineDetail />
         },
         {
           path: 'stationlist',
@@ -28,11 +33,11 @@ const router = createBrowserRouter([
           element: <StationSearchbar />
         },
         {
-          path: 'stationdetail/:name/:line',
+          path: 'stations/:stationId',
           element: <SubwayStationDetail />
         },
         {
-          path: 'stations/:stationId',
+          path: 'stationdetail/:name/:line',
           element: <SubwayStationDetail />
         },
         {
@@ -46,4 +51,4 @@ const router = createBrowserRouter([
 function Router(){
      return <RouterProvider router={router}/>
 }
-export default Router;  
+export default Router;

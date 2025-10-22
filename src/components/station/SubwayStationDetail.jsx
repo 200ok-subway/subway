@@ -102,8 +102,8 @@ function SubwayStationDetail() {
 
   // 로컬 상태
   const [selectedLine, setSelectedLine] = useState("");
-  const [refreshing, setRefreshing] = useState(false);
-  const [lastUpdated, setLastUpdated] = useState(null);
+  const [refreshing, setRefreshing]     = useState(false);
+  const [lastUpdated, setLastUpdated]   = useState(null);
   const intervalRef = useRef(null);
 
   // 리스트 없으면 한 번 로드(직진입 대비)

@@ -1,0 +1,280 @@
+/* main title */
+.line-detail-main-title {
+  width: 100%;
+  height:73px;
+  background-color: #54DCC1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.line-detail-main-title > h1 {
+  font-size: 25px;
+  font-weight: 600;
+  color: white;
+}
+
+/* Root */
+.line-detail {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px;
+  color: #f5f7fb;
+  box-sizing: border-box;
+  margin-top: 50px;
+}
+
+/* sub Title */
+.line-detail-sub-title {
+  display: grid;
+  gap: 10px;
+  margin: 6px 0 18px;
+}
+
+.line-detail-title-text {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+}
+
+.line-detail-title-name {
+  margin: 0;
+  font-size: clamp(22px, 5vw, 30px);
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
+
+.line-detail-title-pill {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(84, 220, 193, .20);
+  color: #54DCC1;
+  font-weight: 700;
+  font-size: 13px;
+  border: 1px solid #54DCC1;
+}
+
+/* Card */
+.line-detail-card {
+  background: #353b46;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 12px;
+  padding: 14px;
+  margin: 14px 0;
+  box-sizing: border-box;
+}
+
+.line-detail-card-hd {
+  margin-bottom: 10px;
+  font-weight: 800;
+  letter-spacing: .2px;
+  opacity: .95;
+}
+
+/* Station */
+.line-detail-station-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 520px) {
+  .line-detail-station-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.line-detail-kv {
+  display: grid;
+  gap: 6px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.06);
+}
+
+.line-detail-kv-k { 
+  font-size: 12px; color: #b8c0cc; 
+}
+
+.line-detail-kv-v { 
+  font-size: 13px; 
+  line-height: 1.8;
+}
+
+/* Facilities */
+.line-detail-fac-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+.line-detail-fac {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  grid-template-rows: auto auto;
+  align-items: center;
+  gap: 4px 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255,255,255,.02);
+  border: 1px solid rgba(255,255,255,.08);
+}
+
+.line-detail-fac-ico {
+  grid-row: span 2;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(255,255,255,.05);
+  font-size: 15px;
+}
+
+.line-detail-fac-label { 
+  font-weight: 700; font-size: 13px; 
+}
+
+.line-detail-fac-status { 
+  font-size: 12px; color: #b8c0cc;
+}
+
+.line-detail-hint { 
+  margin-top: 10px; 
+  font-size: 12px; 
+  color: #b8c0cc; 
+}
+
+/* A11y */
+.line-detail-a11y-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+.line-detail-a11y-item {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255,255,255,.02);
+  border: 1px dashed rgba(255,255,255,.12);
+}
+
+.line-detail-a11y-k { 
+  font-size: 12px; 
+  color: #b8c0cc; 
+  margin-bottom: 4px; 
+}
+
+.line-detail-a11y-v { 
+  font-weight: 500; 
+}
+
+.line-detail-muted { 
+  margin-top: 8px; 
+  font-size: 12px; 
+  color: #b8c0cc; 
+}
+
+/* Placeholders */
+.line-detail-empty {
+  padding: 16px;
+  border-radius: 10px;
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.06);
+  color: #b8c0cc;
+}
+.line-detail-mapph { 
+  display: grid; 
+  gap: 10px; 
+}
+
+.line-detail-mapph-map {
+  height: clamp(180px, 40vw, 260px);
+  border-radius: 12px;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.08) 25%, transparent 25%) -10px 0/20px 20px,
+    linear-gradient(225deg, rgba(255,255,255,.08) 25%, transparent 25%) -10px 0/20px 20px,
+    linear-gradient(45deg, rgba(255,255,255,.08) 25%, transparent 25%) 0 0/20px 20px,
+    linear-gradient(315deg, rgba(255,255,255,.08) 25%, transparent 25%) 0 0/20px 20px,
+    rgba(255,255,255,.03);
+  display: grid;
+  place-items: center;
+  color: #b8c0cc;
+  border: 1px solid rgba(255,255,255,.08);
+}
+
+
+/* ===== Presence(Y) → Green highlight / Absence → Dark ===== */
+
+/* 부드러운 전환 */
+.line-detail-fac,
+.line-detail-a11y-item {
+  transition: background .2s ease, border-color .2s ease,
+              box-shadow .2s ease, transform .08s ease;
+}
+
+/* 시설 카드: 제공(on) */
+.line-detail-fac.on {
+  border-color: rgba(84,220,193,.55);
+  background: rgba(84,220,193,.08);
+  box-shadow: 0 0 0 2px rgba(84,220,193,.22) inset,
+              0 8px 20px rgba(84,220,193,.12);
+}
+.line-detail-fac.on .line-detail-fac-status { 
+  color: #54DCC1;
+}
+
+.line-detail-fac.on .line-detail-fac-ico { 
+  background: rgba(84,220,193,.16); 
+  color: #e6fffa; 
+}
+
+/* 시설 카드: 없음/미확인(off/unk) */
+.line-detail-fac.off,
+.line-detail-fac.unk {
+  opacity: .78;
+  border-style: dashed;
+  border-color: rgba(255,255,255,.10);
+}
+.line-detail-fac.off .line-detail-fac-label,
+.line-detail-fac.unk .line-detail-fac-label { color: #cdd5df; }
+.line-detail-fac.off .line-detail-fac-status,
+.line-detail-fac.unk .line-detail-fac-status { color: #98a2b3; }
+
+/* 버튼 역할을 하는 것이 아니기 때문에 호버 효과는 불필요하다고 판단하여 해당 효과를 뺌 */
+/* 제공만 반짝 호버 */
+/* .line-detail-fac.on:hover {
+  background: rgba(84,220,193,.12);
+  border-color: #54DCC1;
+  transform: translateY(-1px);
+} */
+
+/* 교통약자: ok/no */
+.line-detail-a11y-item.ok {
+  border-style: solid;
+  border-color: rgba(84,220,193,.55);
+  background: rgba(84,220,193,.08);
+  box-shadow: 0 0 0 2px rgba(84,220,193,.22) inset;
+}
+
+/* 버튼 역할을 하는 것이 아니기 때문에 호버 효과는 불필요하다고 판단하여 해당 효과를 뺌 */
+/* .line-detail-a11y-item.ok:hover {
+  background: rgba(84,220,193,.12);
+  transform: translateY(-1px);
+} */
+
+.line-detail-a11y-item.no { 
+  opacity: .84; 
+}
+
+/* 지도 플레이스홀더 초록 톤 */
+.line-detail-mapph-map {
+  border: 1px solid rgba(84,220,193,.18);
+  background:
+  linear-gradient(135deg, rgba(84,220,193,.08) 25%, transparent 25%) -10px 0/20px 20px,
+  linear-gradient(225deg, rgba(84,220,193,.08) 25%, transparent 25%) -10px 0/20px 20px,
+  linear-gradient(45deg,  rgba(84,220,193,.08) 25%, transparent 25%) 0 0/20px 20px,
+  linear-gradient(315deg, rgba(84,220,193,.08) 25%, transparent 25%) 0 0/20px 20px,
+  rgba(255,255,255,.03);
+}
