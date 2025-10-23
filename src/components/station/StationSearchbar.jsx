@@ -1,4 +1,3 @@
-// src/components/StationSearchbar.jsx
 import { useDispatch, useSelector } from "react-redux";
 import { setSearch } from "../../store/slices/subwayStationListSlice.js";
 import "./StationSearchbar.css";

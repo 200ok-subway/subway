@@ -1,257 +1,314 @@
-/* 컨테이너: 넓으면 2열, 좁으면 자동 1열(리스트 위 / 지도 아래) */
-.subwaylinelist-container {
+/* 상단 타이틀 */
+.subway-line-list-title {
+  width: 100%;
+  height: 73px;
+  background-color: #54DCC1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.subway-line-list-title > h1 {
+  font-size: 25px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* 컨테이너: 넓으면 2열, 좁으면 1열 */
+.subway-line-list-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
+  gap: 16px;
   width: 100%;
   padding: 16px;
-  margin-top: 20px;
+  padding-top: 30px;
   box-sizing: border-box;
-  align-items:stretch /* (지도 높이에 맞춤) */
+  align-items: start;
 }
 
-/* ===== Search Panel (다크패널 + 흰글씨) ===== */
-.subwaylinelist-search-container {
-  background: #303644;    /* 디테일 패널색 */
+/* ========================= Left(패널) ========================= */
+.subway-line-list-left {
+  background: rgba(48, 54, 68, 0.5);
+  color: #f5f7fb;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #f5f7fb;     /* 이제 검은 바탕으로 변경했으니 잘보이게 흰 글씨 */
   border-radius: 16px;
-  padding: 14px;
+  padding: 20px 20px;
   display: grid;
-  grid-template-rows: auto auto 1fr;    /* 탭 / 검색바 / 결과리스트 */
+  grid-template-rows: auto auto 1fr;  /* 탭 / 검색바 / 결과리스트 */
   gap: 10px;
   box-sizing: border-box;
+  height: auto;
+  min-height: 0;
 }
 
-/* Tabs */
-.subwaylinelist-tabs { 
+/* 상단 탭 */
+.subway-line-list-tabs { 
   display: flex; 
   gap: 8px; 
 }
 
-.subwaylinelist-tab {
-  color: #f5f7fb;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+.subway-line-list-tab {
+  flex: 0 0 auto;
   padding: 8px 12px;
-  border-radius: 10px;
-  font-weight: 700;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: #2a303d;
+  color: rgba(245, 247, 251, 0.3);
+  font-weight: 600;
   cursor: pointer;
+  transition: background .18s ease, border-color .18s ease, color .18s ease;
+}
+.subway-line-list-tab:hover { 
+  background: rgba(84, 220, 193, 0.08); 
+  border-color: #54DCC1; 
 }
 
-.subwaylinelist-tab.active {
-  background: rgba(84, 220, 193, 0.12);            /* 민트 틴트 */
-  border-color: rgba(84, 220, 193, 0.45);
-  box-shadow: 0 0 0 1px rgba(84, 220, 193, 0.25) inset;
+.subway-line-list-tab.active { 
+  background: rgba(84, 220, 193, 0.2); 
+  border-color: #54DCC1; 
+  color: #fff; 
 }
 
-/* Search Input */
-.subwaylinelist-search {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 8px;
+.subway-line-list-tab:disabled { 
+  opacity: .5; 
+  cursor: not-allowed; 
 }
-.subwaylinelist-search input {
-  background: rgba(255, 255, 255, 0.06);
-  color: #f5f7fb;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 10px;
+
+/* 검색창 */
+.subway-line-list-search { 
+  display: grid; 
+  grid-template-columns: 1fr; 
+  gap: 8px; 
+}
+
+.subway-line-list-search input {
   padding: 10px 12px;
+  background: #242a36;
+  color: #f5f7fb;
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 8px;
   outline: none;
 }
 
-.subwaylinelist-search input::placeholder { 
-  color: rgba(245, 247, 251, 0.55); 
+.subway-line-list-search input::placeholder { 
+  color: rgba(245,247,251,0.5); 
 }
 
-.subwaylinelist-search input:focus {
-  border-color: #54dcc1;                           /* 민트 */
-  box-shadow: 0 0 0 3px rgba(84, 220, 193, 0.18);
-}
-
-/* Results */
-.subwaylinelist-search-list-container {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+/* 결과 리스트 */
+.subway-line-list-results {
+  border-top: 1px solid rgba(255,255,255,0.08);
   padding-top: 8px;
-  max-height: 40vh;                                 /* 최대 높이 */
+  min-height: 0;
   overflow: auto;
 }
 
-.subwaylinelist-search-list-container-items-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.subway-line-list-results-items-center { 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
 }
 
-/* Empty */
-.subwaylinelist-empty {
-  padding: 18px 8px;
-  color: #cfd6e3;                                    /* 연한 흰 */
-  text-align: center;
+.subway-line-list-empty { 
+  padding: 18px 8px; 
+  color: rgba(245,247,251,0.6); 
+  text-align: center; 
 }
 
-/* Item */
-.subway-item {
-  padding: 12px 10px;
-  border-radius: 10px;
+.subway-line-list-item {
+  padding: 10px 8px;
+  border-radius: 8px;
   cursor: pointer;
-  display: flex;
-  justify-content: space-between;
+  display: flex; 
+  justify-content: space-between; 
   align-items: center;
-  color: #f5f7fb;
-  border: 1px solid transparent;
-  transition: background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
-}
-.subway-item:hover {
-  background: rgba(84, 220, 193, 0.10);              /* 디테일처럼 민트 하이라이트 */
-  border-color: rgba(84, 220, 193, 0.45);
-  box-shadow: 0 0 0 1px rgba(84, 220, 193, 0.25) inset;
 }
 
-.subwaylinelist-item-name { 
-  font-weight: 500; 
+.subway-line-list-item:hover { 
+  background: rgba(255,255,255,0.06); 
 }
 
-.subwaylinelist-item-line { 
+.subway-line-list-item-name { 
+  font-weight: 700; 
+  color: #f5f7fb; 
+}
+
+.subway-line-list-item-line { 
   font-size: 12px; 
+  color: rgba(245,247,251,0.7); 
 }
 
-/* ===== Map 카드 (디테일 톤과 일치) ===== */
-.subwaylinelist-map {
+/* ============== Right: 지도 프레임 ============== */
+.subway-line-list-map {
   position: relative;
+  width: 100%;
+  height: 500px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 12px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: #303644;
   z-index: 1;
-  min-height: 500px;
 }
 
-/* ===== Overlay (마커 오버레이: 글자 블랙) ===== */
-.subwaylinelist-overlay {
-  padding: 10px 12px;
-  background: #ffffff;
-  color: #000000;                                    /* 블랙 텍스트 */
-  border-radius: 8px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+.subway-line-list-map-inner { 
+  width: 100%; 
+  height: 100%; 
+}
+
+/* 지도 커스텀 오버레이 */
+.subway-line-list-overlay {
+  position: relative;
+  bottom: 64px;
+  display: inline-block;
+  padding: 8px 12px;
+  background: #fff;
+  color: #111;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.18);
   max-width: 240px;
   font-size: 13px;
-  line-height: 1.4;
-  position: relative;
-  bottom: 60px;
-}
-.subwaylinelist-overlay-title { font-weight: 700; margin-bottom: 4px; }
-
-/* Common */
-.clickable { cursor: pointer; }
-
-/* 1) 그리드 아이템은 위쪽 정렬(늘리지 않음) */
-.subwaylinelist-container {
-  align-items: start;
+  line-height: 1.2;
+  transition: background .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease, transform .12s ease;
+  z-index: 2;
 }
 
-/* 2) 넓을 때(2열 레이아웃 예상 구간) 왼쪽 패널 높이를 지도(400px)와 동일하게 고정 */
-@media (min-width: 667px) {
-  .subwaylinelist-container {
-    margin-top: 70px;
-    padding: 0 16px;
-  }
-  .subwaylinelist-search-container {
-    height: 500px;         /* 지도 높이와 맞춤 */
-    display: grid;
-    grid-template-rows: auto auto 1fr; /* 탭 / 검색바 / 결과리스트 */
-    min-height: 0;         /* 내부 스크롤 허용(그리드 트랩 방지) */
-  }
+.subway-line-list-ov-title { 
+  font-weight: 700; 
 }
 
-/* 3) 결과 리스트는 남은 공간(1fr)을 꽉 채우고 내용만 스크롤 */
-.subwaylinelist-search-list-container {
-  height: 100%;      /* 부모(검색 컨테이너)의 남은 높이 채움 */
-  max-height: none;  /* 이전 max-height/height 있으면 덮어쓰기 */
+.subway-line-list-overlay:hover {
+  background: #54DCC1; 
+  color: #fff; 
+  border-color: #42cbb1;
+  box-shadow: 0 8px 20px rgba(84,220,193,.35); 
+  transform: translateY(-1px);
+}
+
+.subway-line-list-clickable { 
+  cursor: pointer; 
+}
+
+/* ====================== 시간표 카드 ====================== */
+.subway-line-list-time-box{
+  padding: 20px 20px;                  /* 카드 내부 여백 */
+  display: grid;
+  grid-template-rows: auto 1fr;        /* 헤더 + 본문 */
+  width: 100%;
+  height: 500px;
+  background: rgba(48, 54, 68, 0.5);
+  border-radius: 12px;
+  box-sizing: border-box;
+  overflow: hidden; 
+  line-height: 1.35;
+  min-width: 400px;        /* ← 추가: 글자 간격 깨지기 전에 접기 */
+}
+
+/* 헤더(역명/요일) */
+.subway-line-list-time-header-grid { 
+  display: grid; 
+  padding-bottom: 25px; 
+}
+
+.subway-line-list-time-header-title {
+  text-align: center; 
+  line-height: 3;
+  font-size: 16px; 
+  font-weight: 600; 
+  color: #fff;
+}
+
+/* 요일 토글 */
+.subway-line-list-time-day-toggle { 
+  display: flex; 
+  gap: 8px; 
+  justify-content: center; 
+}
+
+.subway-line-list-time-day-btn { 
+  padding: 6px 10px; 
+  font-weight: 700; 
+}
+
+.subway-line-list-time-day-toggle .subway-line-list-time-day-btn.active,
+.subway-line-list-time-day-toggle .subway-line-list-tab.active {
+  background: rgba(84, 220, 193, 0.2); 
+  border-color: #54DCC1;
+  color: #fff;
+}
+
+.subway-line-list-time-day-btn:hover { 
+  background: rgba(84,220,193,0.08); 
+}
+
+/* 본문(2컬럼) — 여기서만 스크롤 */
+.subway-line-list-time-two-col{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  /* border-top: 1px solid rgba(255,255,255,.16);
+  padding: 0 10px 10px;          ⬅ 상단 패딩 제거(0) */
+  color: #fcfcfc;
+  font-weight: 500;
   overflow: auto;
+  padding-right: 8px;      
+}
+
+/* 각 컬럼: 제목 고정 + 리스트 스크롤 */
+.subway-line-list-time-col{
+  display: flex;
+  flex-direction: column;
   min-height: 0;
 }
 
-/* 4) 탭 버튼 / 인풋 높이를 동일하게(44px) */
-.subwaylinelist-tabs { 
-  height: 44px; 
+/* 방향 제목: 고정(sticky) */
+.subway-line-list-time-col-title{
+  position: sticky;
+  top: 0;                        /* 스크롤 프레임의 최상단에 고정 */
+  z-index: 1;
+  background: rgba(48, 54, 68, 0.5);
+  padding: 12px 6px 10px;        /* ⬅ 상단 여백을 여기로 이동 */
+  font-weight: 600;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,.12);
 }
 
-.subwaylinelist-tab {
-  height: 44px;
-  padding: 0 12px;                  /* 높이 고정이니 세로 패딩은 0 */
-  display: inline-flex;
-  align-items: center;              /* 텍스트 수직 정렬 */
-  border-radius: 10px;
+/* 리스트 */
+.subway-line-list-time-list{
+  list-style: none; margin: 0; padding: 8px 0 0;
+  display: grid; gap: 10px;
+  grid-auto-rows: 48px;                /* 균일한 행 높이 */
+  min-height: 0;
 }
 
-.subwaylinelist-search input {
-  height: 44px;                     /* 버튼과 동일 */
-  padding: 0 12px;                  /* 세로 패딩 0 */
-  line-height: 44px;                /* 플레이스홀더 수직 정렬(브라우저별 차이 대비) */
-  box-sizing: border-box;
-}
-
-
-/* ------------------------------------------------- */
-
-/* 상태 레이아웃: 실제 페이지 컨테이너와 동일한 그리드 */
-.subwaylinelist-state {
+/* 한 행 */
+.subway-line-list-time-row-compact{
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 16px;
-  width: 100%;
-  padding: 16px;
-  margin-top: 70px;
-  box-sizing: border-box;
-}
-
-/* 왼쪽 패널 모양(다크 톤, 가운데 정렬, 높이 400) */
-.subwaylinelist-state-panel {
-  height: 400px;
-  background: #303644;
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 16px;
-  color: #f5f7fb;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  grid-template-columns: 92px 1fr;     /* 좌: 시간칩 고정폭 */
   align-items: center;
-  justify-content: center;
+  height: 48px;
+  column-gap: 12px;
+  background: transparent;
+}
+
+.subway-line-list-time-cell-strong { 
+  font-weight: 800; 
+}
+
+.subway-line-list-time-empty { 
   text-align: center;
+  padding: 16px; 
+  color: #9ca3af; 
 }
 
-/* 오른쪽 지도 자리도 같은 높이·모양으로 스켈레톤 */
-.subwaylinelist-state-map {
-  height: 400px;
-  background: #303644;
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 12px;
+/* =========== 반응형 =========== */
+@media (min-width: 667px) {
+  .subway-line-list-left { height: 500px; }
+  .subway-line-list-map  { height: 500px; }
+  .subway-line-list-time-box { height: 500px; }
 }
 
-/* 메시지 텍스트 */
-.subwaylinelist-state-text { font-size: 14px; opacity: .95; }
-
-/* 로딩 스피너(민트) */
-.subwaylinelist-spinner {
-  width: 22px; height: 22px;
-  border: 2px solid rgba(255,255,255,.25);
-  border-top-color: #54dcc1;
-  border-radius: 50%;
-  animation: subway-spin .8s linear infinite;
+@media (max-width: 667px){
+  .subway-line-list-left { height: auto; }
+  .subway-line-list-results{
+    max-height: 60vh; min-height: 0; overflow-y: auto;
+  }
 }
-@keyframes subway-spin { to { transform: rotate(360deg); } }
-
-/* 스켈레톤 효과(선택) */
-.skeleton {
-  position: relative; overflow: hidden;
-}
-.skeleton::after {
-  content:"";
-  position: absolute; inset: 0;
-  background: linear-gradient(90deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0.05) 100%);
-  background-size: 200% 100%;
-  animation: subway-shimmer 1.2s linear infinite;
-  mix-blend-mode: screen;
-}
-@keyframes subway-shimmer { to { background-position: -200% 0; } }
