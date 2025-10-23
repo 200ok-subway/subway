@@ -52,7 +52,7 @@ function InstallPrompt() {
        (
         <div className="prompt-container">
             <p className="prompt-info">SEOULWAY</p>
-            <button className="prompt-btn" onClick={handleInstall} type="button"> DownLoad now </button>
+            <button className="prompt-btn" onClick={handleInstall} type="button">DownLoad</button>
         </div>
        )
      }
