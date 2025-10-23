@@ -6,7 +6,7 @@ const realtimeArrivalsIndex = createAsyncThunk(
   'subwayStationDetailSlice/realtimeArrivalsIndex',
   async (statnNm, thunkAPI) => {
     try {
-      const url = `http://swopenapi.seoul.go.kr/api/subway/${import.meta.env.VITE_SEOUL_OPEN_API_KEY}/json/realtimeStationArrival/0/999/${statnNm}`;
+      const url = `http://swopenapi.seoul.go.kr/api/subway${import.meta.env.VITE_OPEN_API_KEY}/json/realtimeStationArrival/0/999/${statnNm}`;
 
       const { data } = await axios.get(url);
       return data.realtimeArrivalList;
@@ -20,7 +20,7 @@ const upFirstLastTimesIndex = createAsyncThunk(
   'subwayStationDetailSlice/upFirstLastTimesIndex',
   async ({lineNum, day, stationId}, thunkAPI) => {
     try {
-      const url = `http://openapi.seoul.go.kr:8088/${import.meta.env.VITE_SEOUL_OPEN_API_KEY}/json/SearchFirstAndLastTrainbyLineServiceNew/1/1/${lineNum}/1/${day}/${stationId}`;
+      const url = `http://openapi.seoul.go.kr:8088${import.meta.env.VITE_OPEN_API_KEY}/json/SearchFirstAndLastTrainbyLineServiceNew/1/1/${lineNum}/1/${day}/${stationId}`;
   
       const { data } = await axios.get(url);
         
@@ -35,7 +35,7 @@ const downFirstLastTimesIndex = createAsyncThunk(
   'subwayStationDetailSlice/downFirstLastTimesIndex',
   async ({lineNum, day, stationId}, thunkAPI) => {
     try {
-      const url = `http://openapi.seoul.go.kr:8088/${import.meta.env.VITE_SEOUL_OPEN_API_KEY}/json/SearchFirstAndLastTrainbyLineServiceNew/1/1/${lineNum}/2/${day}/${stationId}`;
+      const url = `http://openapi.seoul.go.kr:8088${import.meta.env.VITE_OPEN_API_KEY}/json/SearchFirstAndLastTrainbyLineServiceNew/1/1/${lineNum}/2/${day}/${stationId}`;
 
       const { data } = await axios.get(url);
       console.log(data);

@@ -12,7 +12,7 @@ function Header() {
     <>
       <div className="header-container">
         <div className="header-back" onClick={goBack}>
-          <img src="/base/back.png" alt="뒤로가기 이미지" />
+          <img className="brand-logo" src="/base/back.png" alt="뒤로가기 이미지" />
         </div>
         <Link to = "/">
           <div className="header-home">

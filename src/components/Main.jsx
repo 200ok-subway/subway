@@ -8,7 +8,7 @@ function Main() {
   return (
     <>
       <div className="main-logo-box">
-        <img src="/base/subwaylogo.png" alt="로고 이미지" />
+        <img src="/base/seoulwaylogo.png" alt="로고 이미지" />
       </div>
       <div className="main-button-wrap">
         <div className="main-button" onClick={() => {navigate(`/stations`)}}>
