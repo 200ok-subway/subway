@@ -1,127 +1,333 @@
-import { useState } from "react";
-import { Map, MapMarker, CustomOverlayMap, useKakaoLoader } from "react-kakao-maps-sdk";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Map, MapMarker, CustomOverlayMap, useKakaoLoader } from "react-kakao-maps-sdk";
 import "./SubwayLineList.css";
 import listGeom from "../../data/listGeom.js";
-import { get1To9LineOnOrigin } from "../../utils/listSubwayGeom1to9Util.js"; 
-import { removeParenAndRemoveYeok, removeParenAndMinusZero } from "../../utils/subwaySearchUtils.js";
+import { get1To9LineOnOrigin } from "../../utils/listSubwayGeom1to9Util.js";
+import {
+  removeParenAndRemoveYeok,
+  removeParenAndMinusZero,
+  normalizeTime,
+  dedupRows,
+} from "../../utils/subwaySearchUtils.js";
+import { useDispatch, useSelector } from "react-redux";
+import { getLineTimeTable } from "../../store/thunks/subwayLineTimeTableThunk.js";
 
 export default function SubwayLineList() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // ---------- get subway list(CORS 해결 후 API 호출 복원) ----------
-  // useEffect(() => {
-    // dispatch(getSubwayList()); 
-  // }, [dispatch]);
+  const appkey = import.meta.env.VITE_KAKAO_APP_KEY;
+  useKakaoLoader({ appkey, libraries: ["services", "clusterer"] });
 
-  // ---------- kakao MAp ----------
-  const [loading, error] = useKakaoLoader({
-    appkey: import.meta.env.VITE_KAKAO_APP_KEY, // kakao app key
-    libraries: ["services", "clusterer"]
-  });
+  const [activeTab, setActiveTab] = useState("search");
 
-  // ---------- kakao Map center ----------
-  const [coordinate, setCoordinate] = useState({lat: 37.554648, lng: 126.970607}); // 초기값 서울역
-  const MAP_LEVEL = 5; // kakao map 확대(초기값 5)
+  const stationList = get1To9LineOnOrigin(listGeom);
+  const [searchList, setSearchList] = useState([]);
 
-  // ---------- kakao Marker ----------
-  const [markerItem, setMarkerItem] = useState(null); // markeritem은 선택한 역의 마커 정보 스테이트 
+  function searchStationList(e) {
+    if (e && e.target && typeof e.target.value === "string") {
+      const query = e.target.value.trim();
+      const filtered = query ? stationList.filter((item) => item.stnKrNm.includes(query)) : [];
+      setSearchList(filtered);
+      return;
+    }
+    if (typeof e === "string") {
+      const day = e;
+      setDayTab(day);
+      if (timeMeta.stnNm && timeMeta.lineNm) {
+        loadTimetable(timeMeta.lineNm, timeMeta.stnNm, day);
+      }
+    }
+  }
 
-  // 검색창에서 선택한 역정보 마커와 좌표 셋팅
+  const [coordinate, setCoordinate] = useState({ lat: 37.554648, lng: 126.970607 });
+  const [markerItem, setMarkerItem] = useState(null);
+  const [map, setMap] = useState(null);
+  const MAP_LEVEL = 5;
+
   function selectStation(item) {
     setMarkerItem(item);
     setCoordinate({ lat: Number(item.convY), lng: Number(item.convX) });
   }
 
-  // ---------- search ----------
-  // const stationList = useSelector(state => state.subwayLineList.stationList);
-  const stationList = get1To9LineOnOrigin(listGeom); // 로컬 데이터 사용
+  useEffect(() => {
+    if (!map) return;
+    const onResize = () => {
+      try {
+        map.relayout();
+        const { kakao } = window;
+        if (kakao) map.setCenter(new kakao.maps.LatLng(coordinate.lat, coordinate.lng));
+      } catch {}
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [map, coordinate]);
 
-  const [searchList, setSearchList] = useState([]); // 로컬 검색 결과: 이름 변경
+  useEffect(() => {
+    if (!map || activeTab !== "search") return;
+    const t = setTimeout(() => {
+      try {
+        map.relayout();
+        const { kakao } = window;
+        if (kakao) map.setCenter(new kakao.maps.LatLng(coordinate.lat, coordinate.lng));
+      } catch {}
+    }, 0);
+    return () => clearTimeout(t);
+  }, [activeTab, map, coordinate]);
 
-  // 검색 처리 함수 
-  function searchStationList(e) {
-    const query = e.target.value.trim();
-    const searchList = stationList.filter(item => item.stnKrNm.includes(query));
-    setSearchList(searchList); // 로컬 state만 갱신
+  const [dayTab, setDayTab] = useState("평일");
+  const [timeMeta, setTimeMeta] = useState({ lineNm: "", stnNm: "" });
+  const [cols, setCols] = useState({
+    A: { dir: "상행", title: "", rows: [] },
+    B: { dir: "하행", title: "", rows: [] },
+  });
+  const [timeLoading, setTimeLoading] = useState(false);
+  const [timeError, setTimeError] = useState("");
+
+  useSelector((s) => s.subwayLineTimeTable);
+
+  // 현재 역의 양옆 이웃만으로 방향 타이틀 생성(간단)
+  function getNeighborTitles(lineNmClean, stnNmClean) {
+    const normalizeName = (s) => removeParenAndRemoveYeok(String(s));
+    const stationNumber = (it) => {
+      const v = it.outStnNum || it.stnNo || it.stnCd || it.stnId || "";
+      const n = parseInt(String(v).replace(/\D+/g, ""), 10);
+      return Number.isFinite(n) ? n : 9_999_999;
+    };
+
+    const sameLineSorted = stationList
+      .filter((it) => removeParenAndMinusZero(it.lineNm) === lineNmClean)
+      .sort((a, b) => stationNumber(a) - stationNumber(b));
+
+    const idx = sameLineSorted.findIndex((it) => normalizeName(it.stnKrNm) === stnNmClean);
+    const left = idx > 0 ? normalizeName(sameLineSorted[idx - 1].stnKrNm) : "";
+    const right = idx >= 0 && idx < sameLineSorted.length - 1 ? normalizeName(sameLineSorted[idx + 1].stnKrNm) : "";
+
+    return {
+      ATitle: left ? left + " 방향" : "",
+      BTitle: right ? right + " 방향" : "",
+    };
   }
-  
-  // ---------- redirect ----------
-  function goToStationDetail(item) {
-    const name =  removeParenAndRemoveYeok(item.stnKrNm);     // 끝 괄호 + '역' 제거(역명 정규화)
-    const line = removeParenAndMinusZero(item.lineNm);       // 끝 괄호 + 0패드 제거(호선 정규화)
-    navigate(`/line-diagrams/${name}/${line}`);
+
+  function loadTimetable(lineNmClean, stnNmClean, wkndSe) {
+    setTimeLoading(true);
+    setTimeError("");
+
+    const pair = lineNmClean.includes("2호선") ? ["내선", "외선"] : ["상행", "하행"];
+
+    const baseParams = {
+      lineNm: lineNmClean,
+      wkndSe,
+      stnNm: stnNmClean,
+      tmprTmtblYn: "N",
+      start: 1,
+      limit: 200,
+      select: "trainDptreTm,arvlStnNm,upbdnbSe,wkndSe,lineNm,stnNm",
+    };
+
+    const fetchByDirection = (dir) =>
+      dispatch(getLineTimeTable({ ...baseParams, upbdnbSe: dir })).then((action) =>
+        Array.isArray(action && action.payload) ? action.payload : []
+      );
+
+    Promise.all([fetchByDirection(pair[0]), fetchByDirection(pair[1])])
+      .then(([rawA, rawB]) => {
+        // 유틸 사용: 시간 정규화 + 중복 제거
+        const rowsA = dedupRows(normalizeTime(Array.isArray(rawA) ? rawA : []));
+        const rowsB = dedupRows(normalizeTime(Array.isArray(rawB) ? rawB : []));
+
+        const { ATitle, BTitle } = getNeighborTitles(lineNmClean, stnNmClean);
+
+        setCols({
+          A: { dir: pair[0], title: ATitle || pair[0] + " 방향", rows: rowsA },
+          B: { dir: pair[1], title: BTitle || pair[1] + " 방향", rows: rowsB },
+        });
+        setTimeMeta({ lineNm: lineNmClean, stnNm: stnNmClean });
+      })
+      .catch((e) => setTimeError(String((e && e.message) || e || "시간표 조회 실패")))
+      .finally(() => setTimeLoading(false));
   }
 
-  if (error) {
-    return (
-      <div className="subwaylinelist-state">
-        <div className="subwaylinelist-state-panel">
-          <p className="subwaylinelist-state-text">지도를 불러오지 못했어요.</p>
-        </div>
-        <div className="subwaylinelist-state-map" aria-hidden="true" />
-      </div>
-    );
-  }
+  const onPickStation = (item) => {
+    const stnNmClean = removeParenAndRemoveYeok(item.stnKrNm);
+    const lineNmClean = removeParenAndMinusZero(item.lineNm);
+    if (activeTab === "search") {
+      selectStation(item);
+    } else {
+      loadTimetable(lineNmClean, stnNmClean, dayTab);
+    }
+  };
 
-  if (loading) {
+  const gotoDetailFromMarker = () => {
+    if (!markerItem) return;
+    const stnNmClean = removeParenAndRemoveYeok(markerItem.stnKrNm);
+    const lineNmClean = removeParenAndMinusZero(markerItem.lineNm);
+    navigate(`/line-diagrams/${stnNmClean}/${lineNmClean}`);
+  };
+
+  // 시간 표시에 사용할 라벨(유틸 정규화된 값 우선)
+  const timeLabelOf = (row) =>
+    (row && row.tt && row.tt.label) || String((row && row.trainDptreTm) || "").slice(0, 5);
+
   return (
-    <div className="subwaylinelist-state">
-      <div className="subwaylinelist-state-panel">
-        <span className="subwaylinelist-spinner" aria-hidden="true" />
-        <p className="subwaylinelist-state-text">지도를 불러오는 중이에요...</p>
+    <>
+      <div className="subway-line-list-title">
+        <h1>역 위치 및 시간표</h1>
       </div>
-      <div className="subwaylinelist-state-map skeleton" aria-hidden="true" />
-    </div>
-  );
-}
 
-  return (
-    <div className="subwaylinelist-header">지하철 역 정보 검색</div>,
-    <div className="subwaylinelist-container">  {/* 좌(검색)·우(지도) 2영역을 담는 컨테이너 */}
-      
-  {/* ---------- search  ---------- */}
-      <div className="subwaylinelist-search-container"> {/* 왼쪽 검색 카드; 내부를 탭/검색바/결과 영역 3행으로 구성 */}
-        <div className="subwaylinelist-tabs"> {/* 탭 버튼 래퍼; 현재는 “역 정보 검색”만 활성화 상태 */}
-          <button className="subwaylinelist-tab active">역 정보 검색</button>
-          {/* <button className="subway-tab active">역 시간표 보기 후움 나중에 추가 해보기</button> */}
-        </div>
+      <div className="subway-line-list-container">
+        {/* Left */}
+        <div className="subway-line-list-left">
+          <div className="subway-line-list-tabs">
+            <button
+              className={`subway-line-list-tab ${activeTab === "search" ? "active" : ""}`}
+              onClick={() => setActiveTab("search")}
+            >
+              지하철역 검색
+            </button>
+            <button
+              className={`subway-line-list-tab ${activeTab === "time" ? "active" : ""}`}
+              onClick={() => setActiveTab("time")}
+            >
+              역 시간표 보기
+            </button>
+          </div>
 
-         {/* 조건부로 빈 상태 정렬 클래스를 추가 */}
-        <div className="subwaylinelist-search">
-          <input onChange={searchStationList} placeholder="역명을 입력해주세요"/>   {/* 입력 변화 시 로컬 searchList를 갱신 */}
-        </div>
-         
-        <div className={`subwaylinelist-search-list-container ${searchList.length === 0 && "subwaylinelist-search-list-container-items-center"}`}>
-          {searchList.length === 0 && (
-            <div className="subwaylinelist-empty">예) "서울" → 서울역, 서울대입구</div>
-          )}
+          <div className="subway-line-list-search">
+            <input placeholder="역명을 입력해주세요" onChange={searchStationList} />
+          </div>
 
-          {searchList.length > 0 && searchList.map((item, idx) => (
-              <div className="subway-item"
-                key={`${item.outStnNum}-${idx}`} onClick={() => selectStation(item)}>
-                <div className="subwaylinelist-item-name">{item.stnKrNm}</div>    {/* 표시는 원본 그대로 */}
-                <div className="subwaylinelist-item-line">{item.lineNm}</div>
-              </div>
-            ))}
-        </div>
-      </div>
-    
-  {/* ---------- Map ---------- */}
-      <div className="subwaylinelist-map"> {/* 지도 영역 */}
-        <Map center={coordinate} style={{ width: "100%", height: "500px" }} level={MAP_LEVEL}> {/* 카카오 지도 본체, markerItem = 선택한 역이 있을 때만 마커/오버레이 표시  */}
-          {markerItem && (
-            <>
-              <MapMarker position={coordinate} onClick={() => goToStationDetail(markerItem)} />
-              <CustomOverlayMap position={coordinate}>
-                <div className="subwaylinelist-overlay clickable" onClick={() => goToStationDetail(markerItem)}>
-                  <div className="subwaylinelist-overlay-title">{markerItem.stnKrNm}{markerItem.lineNm}</div>
+          <div
+            className={`subway-line-list-results ${
+              searchList.length === 0 ? "subway-line-list-results-items-center" : ""
+            }`}
+          >
+            {searchList.length === 0 && (
+              <div className="subway-line-list-empty">예) "서울" → 서울역, 서울대입구</div>
+            )}
+            {searchList.length > 0 &&
+              searchList.map((item, idx) => (
+                <div
+                  key={`${item.outStnNum || item.stnKrNm}-${idx}`}
+                  className="subway-line-list-item"
+                  onClick={() => onPickStation(item)}
+                >
+                  <div className="subway-line-list-item-name">{item.stnKrNm}</div>
+                  <div className="subway-line-list-item-line">{item.lineNm}</div>
                 </div>
-              </CustomOverlayMap>
-            </>
+              ))}
+          </div>
+        </div>
+
+        {/* Right */}
+        <div className="subway-line-list-map">
+          {activeTab === "search" && (
+            <Map
+              center={coordinate}
+              className="subway-line-list-map-inner"
+              level={MAP_LEVEL}
+              onCreate={setMap}
+              isPanto
+            >
+              {markerItem && (
+                <>
+                  <MapMarker position={coordinate} onClick={gotoDetailFromMarker} />
+                  <CustomOverlayMap position={coordinate}>
+                    <div
+                      className="subway-line-list-overlay subway-line-list-clickable"
+                      onClick={gotoDetailFromMarker}
+                    >
+                      <div className="subway-line-list-ov-title">
+                        {markerItem.stnKrNm} {markerItem.lineNm}
+                      </div>
+                    </div>
+                  </CustomOverlayMap>
+                </>
+              )}
+            </Map>
           )}
-        </Map>
+
+          {activeTab === "time" && (
+            <div className="subway-line-list-time-box">
+              <div className="subway-line-list-time-header-grid">
+                <strong className="subway-line-list-time-header-title">
+                  {timeMeta.stnNm && timeMeta.lineNm
+                    ? `${timeMeta.stnNm} ${timeMeta.lineNm}`
+                    : "역을 선택하면 시간표가 표시됩니다."}
+                </strong>
+
+                <div className="subway-line-list-time-day-toggle">
+                  {["평일", "주말"].map((day) => (
+                    <button
+                      key={day}
+                      onClick={() => searchStationList(day)}
+                      className={`subway-line-list-tab subway-line-list-time-day-btn ${
+                        dayTab === day ? "active" : ""
+                      }`}
+                    >
+                      {day}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {timeLoading && <div className="subway-line-list-time-empty">불러오는 중…</div>}
+              {timeError && !timeLoading && (
+                <div className="subway-line-list-time-empty">에러: {timeError}</div>
+              )}
+
+              {!timeLoading && !timeError && timeMeta.stnNm && (
+                <div className="subway-line-list-time-two-col">
+                  {/* 왼쪽 */}
+                  <div className="subway-line-list-time-col">
+                    <div className="subway-line-list-time-col-title">
+                      {cols.A.title || cols.A.dir + " 방향"}
+                    </div>
+                    <ul className="subway-line-list-time-list">
+                      {cols.A.rows.length === 0 && (
+                        <div className="subway-line-list-time-empty">데이터 없음</div>
+                      )}
+                      {cols.A.rows.map((row, i) => (
+                        <li className="subway-line-list-time-row-compact" key={`A-${i}`}>
+                          <div className="subway-line-list-time-cell subway-line-list-time-cell-strong">
+                            {timeLabelOf(row)}
+                          </div>
+                          <div className="subway-line-list-time-cell">
+                            {row.arvlStnNm ? row.arvlStnNm + " 방면" : ""}
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* 오른쪽 */}
+                  <div className="subway-line-list-time-col">
+                    <div className="subway-line-list-time-col-title">
+                      {cols.B.title || cols.B.dir + " 방향"}
+                    </div>
+                    <ul className="subway-line-list-time-list">
+                      {cols.B.rows.length === 0 && (
+                        <div className="subway-line-list-time-empty">데이터 없음</div>
+                      )}
+                      {cols.B.rows.map((row, i) => (
+                        <li className="subway-line-list-time-row-compact" key={`B-${i}`}>
+                          <div className="subway-line-list-time-cell subway-line-list-time-cell-strong">
+                            {timeLabelOf(row)}
+                          </div>
+                          <div className="subway-line-list-time-cell">
+                            {row.arvlStnNm ? row.arvlStnNm + " 방면" : ""}
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

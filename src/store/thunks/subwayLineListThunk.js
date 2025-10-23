@@ -11,9 +11,10 @@ import axios from "axios";
       }
       
       const res = await axios.get(url, {params});
+      console.log(res.data);
       return res.data.SearchInfoBySubwayNameService.row;
     } catch(e) {
-      return thunkAPI.rejectWithValue(e.message);
+      thunkAPI.rejectWithValue(e.message);
     }
   }
 );

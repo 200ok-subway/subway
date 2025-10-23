@@ -15,7 +15,7 @@ function Main() {
           <p>지하철역 검색</p>
         </div>
         <div className="main-button" onClick={()=>{navigate(`/line-diagrams`)}}>
-          <p>역 정보 검색</p>
+          <p>지하철역 정보</p>
         </div>
       </div>
     </>

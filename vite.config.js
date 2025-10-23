@@ -20,7 +20,7 @@ export default defineConfig({
       manifest: {
         name: 'SEOULWAY',  // PWA 애플리케이션의 이름 (설치 배너에 표시)
         short_name: 'SEOULWAY', // 홈 화면 아이콘 아래에 표시될 이름
-        description: 'SEOULWAY 이용해 주셔서 감사합니당 :) ', // 앱 설명
+        description: '누구나 쉽고 빠르게, 심플하고 감각적인 지하철을 만나다. SEOULWAY', // 앱 설명
         theme_color: '#54DCC1', // 브라우저 UI 테마 색상
         background_color: '#2c313b', //기본 배경색
         lang: 'ko',                     // 앱의 언어 설정 (기본 언어)
