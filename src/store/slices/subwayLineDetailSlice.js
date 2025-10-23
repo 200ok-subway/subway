@@ -21,7 +21,7 @@ const subwayLineDetailSlice = createSlice({
       })
       .addCase(getSubwayDetail.fulfilled, (state, action) => {
         state.loading = false;
-        state.stationDetail = (action.payload);
+        state.stationDetail =  (action.payload);
       })
       .addCase(getSubwayDetail.rejected, (state, action) => {
         state.loading = false;

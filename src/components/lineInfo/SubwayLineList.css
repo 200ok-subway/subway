@@ -1,19 +1,3 @@
-/* 지하철역 노선도 검색 타이틀 */
-.subwaylinelist-title {
-  width: 100%;
-  height:73px;
-  background-color: #54DCC1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.subwaylinelist-title > h1 {
-  font-size: 25px;
-  font-weight: 600;
-  color: white;
-}
-
 /* 컨테이너: 넓으면 2열, 좁으면 자동 1열(리스트 위 / 지도 아래) */
 .subwaylinelist-container {
   display: grid;
@@ -169,7 +153,7 @@
 /* 2) 넓을 때(2열 레이아웃 예상 구간) 왼쪽 패널 높이를 지도(400px)와 동일하게 고정 */
 @media (min-width: 667px) {
   .subwaylinelist-container {
-    margin-top: 100px;
+    margin-top: 70px;
     padding: 0 16px;
   }
   .subwaylinelist-search-container {

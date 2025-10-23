@@ -1,20 +1,20 @@
-import './App.css'
 import { Outlet, ScrollRestoration } from 'react-router-dom'
+import './App.css'
 import Header from './components/common/Header.jsx'
-import InstallPrompt from './components/InstallPrompt.jsx'
-import Footer from './components/common/Footer.jsx'
+import Footer from './components/common/Footer.jsx';
+import InstallPrompt from './components/InstallPrompt.jsx';
 
 function App() {
 
   return (
     <>
       <InstallPrompt />
-      <Header/>
+      <Header />
       <main>
-        <Outlet/>
+        <Outlet />
       </main>
-      <Footer/>
-      <ScrollRestoration></ScrollRestoration>
+      <Footer />
+      <ScrollRestoration />
     </>
   )
 }

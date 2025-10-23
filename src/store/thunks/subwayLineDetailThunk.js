@@ -12,7 +12,7 @@ import axios from "axios";
       console.log(res.data);
       return res.data.TbSeoulmetroStConve.row;
     } catch(e) {
-      thunkAPI.rejectWithValue(e.message);
+      thunkAPI.rejectWithValue(e.message);   
       // return rejectWithValue(e?.message ?? "request failed");
     }
   }

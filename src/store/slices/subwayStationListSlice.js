@@ -1,49 +1,20 @@
-import { createSlice, isAnyOf } from "@reduxjs/toolkit";
-import { stationIndex } from "../thunks/subwayStationListThunk.js";
-
-const initialState = {
-  nameList: [],
-  listPresent: [],
-  // searchStationNm: "",
-  loading: false,
-  error: null,
-};
+import { createSlice } from "@reduxjs/toolkit";
+import { subwayStationIndex } from "../thunks/subwayStationListThunk";
 
 const subwayStationListSlice = createSlice({
-  name: "subwayStationList",
-  initialState,
+  name: 'subwayStationListSlice',
+  initialState: {
+    subwayList: [],
+  },
   reducers: {
-    // setSearch( state, { payload }) {
-    //   state.searchStationNm = payload ?? "";
-    // },
+    
   },
-  extraReducers: (builder) => {
-    builder.addCase(stationIndex.fulfilled, (state, { payload }) => {
-      state.loading = false;
-      state.listPresent = payload?.listPresent ?? [];
-      state.nameList = payload?.nameList ?? [];
-    });
-
-    // pending + rejected 하나로 묶기
-    builder.addMatcher(
-      isAnyOf(stationIndex.pending, stationIndex.rejected),
-      (state, action) => {
-        if (stationIndex.pending.match(action)) {
-          // pending (요청 시작)
-          state.loading = true;
-          state.error = null;
-        } else {
-          // rejected (요청 실패)
-          state.loading = false;
-          state.error = action.error?.message || "failed";
-        }
-      }
-    );
-  },
+  extraReducers: builder => {
+    builder
+      .addCase(subwayStationIndex.fulfilled, (state, action) => {
+        state.subwayList = action.payload;
+      })
+  }
 });
-
-export const {
-  setSearch
-} = subwayStationListSlice.actions;
 
 export default subwayStationListSlice.reducer;
