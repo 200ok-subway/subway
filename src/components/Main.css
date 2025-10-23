@@ -1,39 +1,41 @@
-.main-logoImgBox{
-    height:284px;
-    width:284px;
-    margin: 40px auto;
-    
+.main-logo-box {
+  height: 284px;
+  width: 284px;
+  margin: 40px auto;
 }
-.main-logoImgBox:hover{
-   animation: spinY 2s linear infinite;
 
+.main-logo-box:hover {
+  animation: spinY 2s linear infinite;
 }
+
 @keyframes spinY {
   from { transform: rotateY(0deg); }
   to   { transform: rotateY(360deg); }
 }
 
-.main-logoImgBox>img{
-    width:284px;
+.main-logo-box > img {
+  width:284px;
 }
-.main-buttonWrap{
-   width: 340px;
-   margin: 50px auto;
+
+.main-button-wrap {
+  width: 340px;
+  margin: 50px auto;
 }
-.main-button{
-    cursor: pointer;
-    max-width: 340px;
-    height:100px;
-    border-radius: 50px;
-    background-color: white;
-    font-weight: 600;
-    font-size: 35px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
-    
+
+.main-button {
+  cursor: pointer;
+  max-width: 340px;
+  height: 100px;
+  border-radius: 50px;
+  background-color: white;
+  font-weight: 600;
+  font-size: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
 }
-.main-button:hover{
-    transform: translateY(-10px);
+
+.main-button:hover {
+  transform: translateY(-10px);
 }

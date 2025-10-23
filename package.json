@@ -1,5 +1,5 @@
 {
-  "name": "subway",
+  "name": "seoul-subway-200ok",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -28,8 +28,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.4.0",
-    "kakao.maps.d.ts": "^0.1.40",
     "vite": "^7.1.7",
-    "vite-plugin-pwa": "^1.0.3"
+    "vite-plugin-pwa": "^1.1.0"
   }
 }

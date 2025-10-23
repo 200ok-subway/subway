@@ -1,65 +1,47 @@
 // src/store/slices/subwayStationDetailSlice.js
 import { createSlice } from "@reduxjs/toolkit";
-import { stationRealtimeIndex, firstLastByLine } from "../thunks/subwayStationDetailThunk.js";
-
-const initialState = {
-  // 실시간
-  realtime: [],
-  loadingRealtime: false,
-  errorRealtime: null,
-
-  // 첫/막차
-  firstUp: [],
-  firstDown: [],
-  dow: 1, // 1: 평일, 2: 주말, 3: 공휴일 // 기본값은 평일 
-  line: "",
-  loadingFirstLast: false,
-  errorFirstLast: null, // 평일, 주말, 공휴일
-};
+import { realtimeArrivalsIndex, upFirstLastTimesIndex, downFirstLastTimesIndex } from "../thunks/subwayStationDetailThunk";
 
 const subwayStationDetailSlice = createSlice({
-  name: "subwayStationDetail",
-  initialState,
+  name: 'subwayStationDetailSlice',
+  initialState: {
+    realtimeArrivalList: [],
+    upFirstLastTimesList: [],
+    downFirstLastTimesList: [],
+  },
   reducers: {
-    setDow(state, { payload }) {
-      state.dow = Number(payload) || 1;
+    setRealtimeArrivalList(state, action) {
+      state.realtimeArrivalList = action.payload;
+    },
+    clearState(state) {
+      state.realtimeArrivalList = [];
+      state.upFirstLastTimesList = [];
+      state.downFirstLastTimesList = [];
     },
   },
-  extraReducers: (builder) => {
-    // 실시간
+  extraReducers: builder => {
     builder
-      .addCase(stationRealtimeIndex.pending, (s) => {
-        s.loadingRealtime = true;
-        s.errorRealtime = null;
+      .addCase(realtimeArrivalsIndex.fulfilled, (state, action) => {
+        state.realtimeArrivalList = action.payload || [];
       })
-      .addCase(stationRealtimeIndex.fulfilled, (s, { payload }) => {
-        s.loadingRealtime = false;
-        s.realtime = Array.isArray(payload) ? payload : [];
+      .addCase(upFirstLastTimesIndex.fulfilled, (state, action) => {
+        state.upFirstLastTimesList = action.payload || [];
       })
-      .addCase(stationRealtimeIndex.rejected, (s, { payload }) => {
-        s.loadingRealtime = false;
-        s.errorRealtime = payload || "realtime failed";
-      });
-
-    // 첫/막차
-    builder
-      .addCase(firstLastByLine.pending, (s) => {
-        s.loadingFirstLast = true;
-        s.errorFirstLast = null;
+      .addCase(downFirstLastTimesIndex.fulfilled, (state, action) => {
+        state.downFirstLastTimesList = action.payload || [];
       })
-      .addCase(firstLastByLine.fulfilled, (s, { payload }) => {
-        s.loadingFirstLast = false;
-        s.firstUp = payload.up || [];
-        s.firstDown = payload.down || [];
-        s.line = payload.line || "";
-        s.dow = payload.dow ?? s.dow;
-      })
-      .addCase(firstLastByLine.rejected, (s, { payload }) => {
-        s.loadingFirstLast = false;
-        s.errorFirstLast = payload || "first/last failed";
-      });
-  },
+      .addMatcher(
+        action => action.type.startsWith('subwayStationDetailSlice') && action.type.endsWith('/rejected'),
+        (state, action) => {
+          state.realtimeArrivalList = [];
+          state.upFirstLastTimesList = [];
+          state.downFirstLastTimesList = [];
+          console.error('에러에러.', action.error);
+          alert('현재 서울교통공사에서 정보를 받아올 수 없습니다.');
+        }
+      );
+  }
 });
 
-export const { setDow } = subwayStationDetailSlice.actions;
+export const { clearState } = subwayStationDetailSlice.actions;
 export default subwayStationDetailSlice.reducer;
