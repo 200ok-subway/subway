@@ -151,48 +151,65 @@ export default function SubwayLineDetail() {
           </div>
         </div>
 
-        {/* 시설 정보 (기존 그대로) */}
-        <div className="line-detail-card">
-          <div className="line-detail-card-hd">시설 정보</div>
-          <div className="line-detail-fac-grid">
-            <div className={`line-detail-fac ${facCls(c.PARKING)}`}>
-              <div className="line-detail-fac-ico" aria-hidden>•</div>
-              <div className="line-detail-fac-label">환승주차장</div>
-              <div className="line-detail-fac-status">{YN(c.PARKING)}</div>
+      {/* 시설 정보 (기존 그대로) */}
+      <div className="line-detail-card">
+        <div className="line-detail-card-hd">시설 정보</div>
+        <div className="line-detail-fac-grid">
+          {/* - facCls(c.PARKING): 해당 값에 따라 'on' 또는 'off' 클래스가 붙는다.
+              - aria-hidden은 보조 기술(스크린리더)에게 아이콘이 의미 없는 장식임을 알려줌.
+              - YN(c.PARKING): 값이 'Y'면 'Y', 아니면 'N'을 표시해 사용자가 상태를 즉시 알 수 있게 한다.
+          */}
+          <div className={`line-detail-fac ${facCls(c.PARKING)}`}>
+            <div className="line-detail-fac-ico" aria-hidden>
+              <img className="line-detail-img" src="/subwaylinedetailbase/transfer-parking-lot.png" alt="환승주차장 아이콘" />
             </div>
-            <div className={`line-detail-fac ${facCls(c.BICYCLE)}`}>
-              <div className="line-detail-fac-ico" aria-hidden>•</div>
-              <div className="line-detail-fac-label">자전거보관소</div>
-              <div className="line-detail-fac-status">{YN(c.BICYCLE)}</div>
-            </div>
-            <div className={`line-detail-fac ${facCls(c.CIM)}`}>
-              <div className="line-detail-fac-ico" aria-hidden>•</div>
-              <div className="line-detail-fac-label">무인민원발급기</div>
-              <div className="line-detail-fac-status">{YN(c.CIM)}</div>
-            </div>
-            <div className={`line-detail-fac ${facCls(c.EXCHANGE)}`}>
-              <div className="line-detail-fac-ico" aria-hidden>•</div>
-              <div className="line-detail-fac-label">환전키오스크</div>
-              <div className="line-detail-fac-status">{YN(c.EXCHANGE)}</div>
-            </div>
-            <div className={`line-detail-fac ${facCls(c.TRAIN)}`}>
-              <div className="line-detail-fac-ico" aria-hidden>•</div>
-              <div className="line-detail-fac-label">기차예매</div>
-              <div className="line-detail-fac-status">{YN(c.TRAIN)}</div>
-            </div>
-            <div className={`line-detail-fac ${facCls(c.CULTURE)}`}>
-              <div className="line-detail-fac-ico" aria-hidden>•</div>
-              <div className="line-detail-fac-label">문화공간</div>
-              <div className="line-detail-fac-status">{YN(c.CULTURE)}</div>
-            </div>
-            <div className={`line-detail-fac ${facCls(c.PLACE)}`}>
-              <div className="line-detail-fac-ico" aria-hidden>•</div>
-              <div className="line-detail-fac-label">만남의장소</div>
-              <div className="line-detail-fac-status">{YN(c.PLACE)}</div>
-            </div>
+            <div className="line-detail-fac-label">환승주차장</div>
+            <div className="line-detail-fac-status">{YN(c.PARKING)}</div>
           </div>
-          {/* <p className="line-detail-hint">상태 값은 Y/N 기준이며, 빈 값은 N으로 표기합니다.</p> */}
+          <div className={`line-detail-fac ${facCls(c.BICYCLE)}`}>
+            <div className="line-detail-fac-ico" aria-hidden>
+              <img className="line-detail-img" src="/subwaylinedetailbase/bicycle-storage.png" alt="자전거보관소 아이콘" />
+            </div>
+            <div className="line-detail-fac-label">자전거보관소</div>
+            <div className="line-detail-fac-status">{YN(c.BICYCLE)}</div>
+          </div>
+          <div className={`line-detail-fac ${facCls(c.CIM)}`}>
+            <div className="line-detail-fac-ico" aria-hidden>
+              <img className="line-detail-img" src="/subwaylinedetailbase/unmanned-civil-service-issuance-machine.png" alt="무인민원발급기 아이콘" />
+            </div>
+            <div className="line-detail-fac-label">무인민원발급기</div>
+            <div className="line-detail-fac-status">{YN(c.CIM)}</div>
+          </div>
+          <div className={`line-detail-fac ${facCls(c.EXCHANGE)}`}>
+            <div className="line-detail-fac-ico" aria-hidden>
+              <img className="line-detail-img" src="/subwaylinedetailbase/currency-exchange-kiosk.png" alt="환전키오스크 아이콘" />
+            </div>
+            <div className="line-detail-fac-label">환전키오스크</div>
+            <div className="line-detail-fac-status">{YN(c.EXCHANGE)}</div>
+          </div>
+          <div className={`line-detail-fac ${facCls(c.TRAIN)}`}>
+            <div className="line-detail-fac-ico" aria-hidden>
+              <img className="line-detail-img" src="/subwaylinedetailbase/train-reservation.png" alt="기차예매 아이콘" />
+            </div>
+            <div className="line-detail-fac-label">기차예매</div>
+            <div className="line-detail-fac-status">{YN(c.TRAIN)}</div>
+          </div>
+          <div className={`line-detail-fac ${facCls(c.CULTURE)}`}>
+            <div className="line-detail-fac-ico" aria-hidden>
+              <img className="line-detail-img" src="/subwaylinedetailbase/cultural-space.png" alt="문화공간 아이콘" />
+            </div>
+            <div className="line-detail-fac-label">문화공간</div>
+            <div className="line-detail-fac-status">{YN(c.CULTURE)}</div>
+          </div>
+          <div className={`line-detail-fac ${facCls(c.PLACE)}`}>
+            <div className="line-detail-fac-ico" aria-hidden>
+              <img className="line-detail-img" src="/subwaylinedetailbase/meeting-place.png" alt="만남의장소 아이콘" />
+            </div>
+            <div className="line-detail-fac-label">만남의장소</div>
+            <div className="line-detail-fac-status">{YN(c.PLACE)}</div>
+          </div>
         </div>
+      </div>
 
         {/* 교통약자 요약 */}
         <div className="line-detail-card">
@@ -222,118 +239,6 @@ export default function SubwayLineDetail() {
           </div>
         )}
       </div>
-
-      {/* 로딩/에러 */}
-      {loading && (
-        <div className="line-detail-card">
-          <div className="line-detail-card-hd">로딩</div>
-          불러오는 중…
-        </div>
-      )}
-      {error && (
-        <div className="line-detail-card">
-          <div className="line-detail-card-hd">에러</div>
-          <div className="line-detail-empty">{String(error)}</div>
-        </div>
-      )}
-
-      {/* 역 정보 */}
-      <div className="line-detail-card">
-        <div className="line-detail-card-hd">역 정보</div>
-        <div className="line-detail-station-grid">
-          <div className="line-detail-kv">
-            <span className="line-detail-kv-k">지번 주소</span>
-            <span className="line-detail-kv-v">{oldAddr}</span>
-          </div>
-          <div className="line-detail-kv">
-            <span className="line-detail-kv-k">도로명 주소</span>
-            <span className="line-detail-kv-v">{roadAddr}</span>
-          </div>
-          <div className="line-detail-kv">
-            <span className="line-detail-kv-k">연락처</span>
-            <span className="line-detail-kv-v">{telno}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* 시설 정보 (기존 그대로) */}
-      <div className="line-detail-card">
-        <div className="line-detail-card-hd">시설 정보</div>
-        <div className="line-detail-fac-grid">
-          {/* - facCls(c.PARKING): 해당 값에 따라 'on' 또는 'off' 클래스가 붙는다.
-              - aria-hidden은 보조 기술(스크린리더)에게 아이콘이 의미 없는 장식임을 알려줌.
-              - YN(c.PARKING): 값이 'Y'면 'Y', 아니면 'N'을 표시해 사용자가 상태를 즉시 알 수 있게 한다.
-          */}
-          <div className={`line-detail-fac ${facCls(c.PARKING)}`}>
-            <div className="line-detail-fac-ico" aria-hidden>•</div>
-            <div className="line-detail-fac-label">환승주차장</div>
-            <div className="line-detail-fac-status">{YN(c.PARKING)}</div>
-          </div>
-          <div className={`line-detail-fac ${facCls(c.BICYCLE)}`}>
-            <div className="line-detail-fac-ico" aria-hidden>•</div>
-            <div className="line-detail-fac-label">자전거보관소</div>
-            <div className="line-detail-fac-status">{YN(c.BICYCLE)}</div>
-          </div>
-          <div className={`line-detail-fac ${facCls(c.CIM)}`}>
-            <div className="line-detail-fac-ico" aria-hidden>•</div>
-            <div className="line-detail-fac-label">무인민원발급기</div>
-            <div className="line-detail-fac-status">{YN(c.CIM)}</div>
-          </div>
-          <div className={`line-detail-fac ${facCls(c.EXCHANGE)}`}>
-            <div className="line-detail-fac-ico" aria-hidden>•</div>
-            <div className="line-detail-fac-label">환전키오스크</div>
-            <div className="line-detail-fac-status">{YN(c.EXCHANGE)}</div>
-          </div>
-          <div className={`line-detail-fac ${facCls(c.TRAIN)}`}>
-            <div className="line-detail-fac-ico" aria-hidden>•</div>
-            <div className="line-detail-fac-label">기차예매</div>
-            <div className="line-detail-fac-status">{YN(c.TRAIN)}</div>
-          </div>
-          <div className={`line-detail-fac ${facCls(c.CULTURE)}`}>
-            <div className="line-detail-fac-ico" aria-hidden>•</div>
-            <div className="line-detail-fac-label">문화공간</div>
-            <div className="line-detail-fac-status">{YN(c.CULTURE)}</div>
-          </div>
-          <div className={`line-detail-fac ${facCls(c.PLACE)}`}>
-            <div className="line-detail-fac-ico" aria-hidden>•</div>
-            <div className="line-detail-fac-label">만남의장소</div>
-            <div className="line-detail-fac-status">{YN(c.PLACE)}</div>
-          </div>
-        </div>
-        <p className="line-detail-hint">상태 값은 Y/N 기준이며, 빈 값은 N으로 표기합니다.</p>
-      </div>
-
-      {/* 교통약자 요약 */}
-      <div className="line-detail-card">
-        <div className="line-detail-card-hd">교통약자 정보</div>
-        <div className="line-detail-a11y-grid">
-          {/* a11yCls(c.EL): 'ok' 또는 'no' 클래스를 반환.
-              isY(c.EL) ? "있음" : "없음" 으로 텍스트 표현.
-          */}
-          <div className={`line-detail-a11y-item ${a11yCls(c.EL)}`}>
-            <div className="line-detail-a11y-k">엘리베이터</div>
-            <div className="line-detail-a11y-v">{isY(c.EL) ? "있음" : "없음"}</div>
-          </div>
-          <div className={`line-detail-a11y-item ${a11yCls(c.WL)}`}>
-            <div className="line-detail-a11y-k">휠체어 리프트</div>
-            <div className="line-detail-a11y-v">{isY(c.WL) ? "있음" : "없음"}</div>
-          </div>
-          <div className={`line-detail-a11y-item ${a11yCls(c.FDROOM)}`}>
-            <div className="line-detail-a11y-k">유아수유실</div>
-            <div className="line-detail-a11y-v">{isY(c.FDROOM) ? "있음" : "없음"}</div>
-          </div>
-        </div>
-        <p className="line-detail-muted">상세 위치/동선은 추후 제가 추가할 시 표기됩니다.</p>
-      </div>
-
-      {/* 매칭 실패 안내 */}
-      {/* facility가 falsy(없음)이고 loading, error가 둘 다 false인 경우에만 표시 */}
-      {!loading && !error && !facility && (
-        <div className="line-detail-card">
-          <div className="line-detail-card-hd">알림</div>
-          <div className="line-detail-empty">해당 역 데이터를 찾지 못했습니다.</div>
-        </div>
-      )}
     </div>
   </>
   );

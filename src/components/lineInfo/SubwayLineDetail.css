@@ -1,5 +1,5 @@
-/* 디테일 편의시설 정보 페이지 상단 초록 바  */
-.subwayline-detail-title {
+/* main title */
+.line-detail-main-title {
   width: 100%;
   height: 73px;
   background-color: #54DCC1;
@@ -8,12 +8,13 @@
   align-items: center;
 }
 
-.subwayline-detail-title > h1 {
+.line-detail-main-title > h1 {
   font-size: 25px;
   font-weight: 600;
   color: white;
 }
 
+/* Root */
 .line-detail {
   width: 100%;
   max-width: 1200px;
@@ -21,10 +22,11 @@
   padding: 16px;
   color: #f5f7fb;
   box-sizing: border-box;
+  margin-top: 50px;
 }
 
-/* Title */
-.line-detail-title {
+/* sub Title */
+.line-detail-sub-title {
   display: grid;
   gap: 10px;
   margin: 6px 0 18px;
@@ -128,8 +130,15 @@
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: rgba(255,255,255,.05);
+  /* background: rgb(105, 100, 100); */
   font-size: 15px;
+}
+
+/* 시설 정보 아이콘 크기 조절 */
+.line-detail-img {
+  width: 24px;   /* 가로 크기 */
+  height: 24px;  /* 세로 크기 */
+  object-fit: contain; /* 비율 유지하며 잘리지 않게 */
 }
 
 .line-detail-fac-label { 
@@ -137,7 +146,7 @@
 }
 
 .line-detail-fac-status { 
-  font-size: 12px; color: #b8c0cc; 
+  font-size: 12px; color: #b8c0cc;
 }
 
 /* A11y */
@@ -210,11 +219,11 @@
               0 8px 20px rgba(84,220,193,.12);
 }
 .line-detail-fac.on .line-detail-fac-status { 
-  color: #54DCC1; 
+  color: #54DCC1;
 }
 
 .line-detail-fac.on .line-detail-fac-ico { 
-  background: rgba(84,220,193,.16); 
+  /* background: rgba(84,220,193,.16); */
   color: #e6fffa; 
 }
 
@@ -230,12 +239,13 @@
 .line-detail-fac.off .line-detail-fac-status,
 .line-detail-fac.unk .line-detail-fac-status { color: #98a2b3; }
 
+/* 버튼 역할을 하는 것이 아니기 때문에 호버 효과는 불필요하다고 판단하여 해당 효과를 뺌 */
 /* 제공만 반짝 호버 */
-.line-detail-fac.on:hover {
+/* .line-detail-fac.on:hover {
   background: rgba(84,220,193,.12);
   border-color: #54DCC1;
   transform: translateY(-1px);
-}
+} */
 
 /* 교통약자: ok/no */
 .line-detail-a11y-item.ok {
@@ -245,10 +255,11 @@
   box-shadow: 0 0 0 2px rgba(84,220,193,.22) inset;
 }
 
-.line-detail-a11y-item.ok:hover {
+/* 버튼 역할을 하는 것이 아니기 때문에 호버 효과는 불필요하다고 판단하여 해당 효과를 뺌 */
+/* .line-detail-a11y-item.ok:hover {
   background: rgba(84,220,193,.12);
   transform: translateY(-1px);
-}
+} */
 
 .line-detail-a11y-item.no { 
   opacity: .84; 
@@ -258,9 +269,9 @@
 .line-detail-mapph-map {
   border: 1px solid rgba(84,220,193,.18);
   background:
-    linear-gradient(135deg, rgba(84,220,193,.08) 25%, transparent 25%) -10px 0/20px 20px,
-    linear-gradient(225deg, rgba(84,220,193,.08) 25%, transparent 25%) -10px 0/20px 20px,
-    linear-gradient(45deg,  rgba(84,220,193,.08) 25%, transparent 25%) 0 0/20px 20px,
-    linear-gradient(315deg, rgba(84,220,193,.08) 25%, transparent 25%) 0 0/20px 20px,
-    rgba(255,255,255,.03);
+  linear-gradient(135deg, rgba(84,220,193,.08) 25%, transparent 25%) -10px 0/20px 20px,
+  linear-gradient(225deg, rgba(84,220,193,.08) 25%, transparent 25%) -10px 0/20px 20px,
+  linear-gradient(45deg,  rgba(84,220,193,.08) 25%, transparent 25%) 0 0/20px 20px,
+  linear-gradient(315deg, rgba(84,220,193,.08) 25%, transparent 25%) 0 0/20px 20px,
+  rgba(255,255,255,.03);
 }
