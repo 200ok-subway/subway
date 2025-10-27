@@ -1,0 +1,385 @@
+/* 상단 타이틀 */
+.subway-line-list-title {
+  width: 100%;
+  height: 73px;
+  background-color: #54DCC1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.subway-line-list-title > h1 {
+  font-size: 25px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* 컨테이너: 넓으면 2열, 좁으면 1열 */
+.subway-line-list-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+  width: 100%;
+  padding: 16px;
+  padding-top: 30px;
+  box-sizing: border-box;
+  align-items: start;
+}
+
+/* ========================= Left(패널) ========================= */
+.subway-line-list-left {
+  background: rgba(48, 54, 68, 0.5);
+  color: #f5f7fb;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 20px 20px;
+  display: grid;
+  grid-template-rows: auto auto 1fr;  /* 탭 / 검색바 / 결과리스트 */
+  gap: 10px;
+  box-sizing: border-box;
+  height: auto;
+  min-height: 0;
+}
+
+/* 상단 탭 */
+.subway-line-list-tabs { 
+  display: flex; 
+  gap: 8px; 
+}
+
+.subway-line-list-tab {
+  flex: 0 0 auto;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: #2a303d;
+  color: rgba(245, 247, 251, 0.3);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .18s ease, border-color .18s ease, color .18s ease;
+}
+.subway-line-list-tab:hover { 
+  background: rgba(84, 220, 193, 0.08); 
+  border-color: #54DCC1; 
+}
+
+.subway-line-list-tab.active { 
+  background: rgba(84, 220, 193, 0.2); 
+  border-color: #54DCC1; 
+  color: #fff; 
+}
+
+.subway-line-list-tab:disabled { 
+  opacity: .5; 
+  cursor: not-allowed; 
+}
+
+/* 검색창 */
+.subway-line-list-search { 
+  display: grid; 
+  grid-template-columns: 1fr; 
+  gap: 8px; 
+}
+
+.subway-line-list-search input {
+  padding: 10px 12px;
+  background: #242a36;
+  color: #f5f7fb;
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 8px;
+  outline: none;
+}
+
+.subway-line-list-search input::placeholder { 
+  color: rgba(245,247,251,0.5); 
+}
+
+/* 결과 리스트 */
+.subway-line-list-results {
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding-top: 8px;
+  min-height: 0;
+  overflow: auto;
+}
+
+.subway-line-list-results-items-center { 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+}
+
+.subway-line-list-empty { 
+  padding: 18px 8px; 
+  color: rgba(245,247,251,0.6); 
+  text-align: center; 
+}
+
+.subway-line-list-item {
+  padding: 10px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center;
+}
+
+.subway-line-list-item:hover { 
+  background: rgba(255,255,255,0.06); 
+}
+
+.subway-line-list-item-name { 
+  font-weight: 700; 
+  color: #f5f7fb; 
+}
+
+.subway-line-list-item-line { 
+  font-size: 12px; 
+  color: rgba(245,247,251,0.7); 
+}
+
+/* ============== Right: 지도 프레임 ============== */
+.subway-line-list-map {
+  position: relative;
+  width: 100%;
+  height: 500px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.subway-line-list-map-inner { 
+  width: 100%; 
+  height: 100%; 
+}
+
+/* 지도 커스텀 오버레이 */
+.subway-line-list-overlay {
+  position: relative;
+  bottom: 64px;
+  display: inline-block;
+  padding: 8px 12px;
+  background: #fff;
+  color: #111;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.18);
+  max-width: 240px;
+  font-size: 13px;
+  line-height: 1.2;
+  transition: background .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease, transform .12s ease;
+  z-index: 2;
+}
+
+.subway-line-list-ov-title { 
+  font-weight: 700; 
+}
+
+.subway-line-list-overlay:hover {
+  background: #54DCC1; 
+  color: #fff; 
+  border-color: #42cbb1;
+  box-shadow: 0 8px 20px rgba(84,220,193,.35); 
+  transform: translateY(-1px);
+}
+
+.subway-line-list-clickable { 
+  cursor: pointer; 
+}
+
+/* ====================== 시간표 카드 ====================== */
+.subway-line-list-time-box{
+  padding: 20px 20px;                  /* 카드 내부 여백 */
+  display: grid;
+  grid-template-rows: auto 1fr;        /* 헤더 + 본문 */
+  width: 100%;
+  max-height: 500px;
+  background: rgba(48, 54, 68, 0.5);
+  border-radius: 12px;
+  box-sizing: border-box;
+  overflow: auto;
+  line-height: 1.35;
+  scrollbar-gutter: stable both-edges; /* 스크롤 겹침 방지(지원 브라우저) */
+}
+
+/* 헤더(역명/요일) */
+.subway-line-list-time-header-grid { 
+  display: grid; 
+  padding-bottom: 25px; 
+}
+
+.subway-line-list-time-header-title {
+  text-align: center; 
+  line-height: 3;
+  font-size: 16px; 
+  font-weight: 600; 
+  color: #fff;
+}
+
+/* 요일 토글 */
+.subway-line-list-time-day-toggle { 
+  display: flex; 
+  gap: 8px; 
+  justify-content: center; 
+}
+
+.subway-line-list-time-day-btn { 
+  padding: 6px 10px; 
+  font-weight: 700; 
+}
+
+.subway-line-list-time-day-toggle .subway-line-list-time-day-btn.active,
+.subway-line-list-time-day-toggle .subway-line-list-tab.active {
+  background: rgba(84, 220, 193, 0.2); 
+  border-color: #54DCC1;
+  color: #fff;
+}
+
+.subway-line-list-time-day-btn:hover { 
+  background: rgba(84,220,193,0.08); 
+}
+
+/* 본문(2컬럼) — 여기서만 스크롤 */
+.subway-line-list-time-two-col{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  /* border-top: 1px solid rgba(255,255,255,.16);
+  padding: 0 10px 10px;          ⬅ 상단 패딩 제거(0) */
+  color: #fcfcfc;
+  font-weight: 500;
+  overflow: auto;
+  padding-right: 8px;    
+  padding-bottom: 18px;  
+}
+
+/* 각 컬럼: 제목 고정 + 리스트 스크롤 */
+.subway-line-list-time-col{
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  font-size: 14px;  
+}
+
+/* 방향 제목: 고정(sticky) */
+.subway-line-list-time-col-title{
+  position: sticky;
+  top: 0;                        /* 스크롤 프레임의 최상단에 고정 */
+  z-index: 1;
+  background: rgba(48, 54, 68, 0.5);
+  padding: 12px 6px 10px;        /* ⬅ 상단 여백을 여기로 이동 */
+  font-weight: 600;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,.12);
+  font-size: 13px;
+}
+
+/* 리스트 */
+.subway-line-list-time-list{
+  list-style: none; margin: 0; padding: 8px 0 0;
+  display: grid; gap: 10px;
+  grid-auto-rows: 48px;                /* 균일한 행 높이 */
+  min-height: 0;
+}
+
+/* 한 행 */
+.subway-line-list-time-row-compact{
+  display: grid;
+  grid-template-columns: 82px 1fr;     /* 좌: 시간칩 고정폭 */
+  align-items: center;
+  height: 44px;
+  column-gap: 10px;
+  background: transparent;
+}
+
+.subway-line-list-time-cell-strong { 
+  font-weight: 700; 
+  font-size: 15px;
+}
+
+/* 목적지 한 줄 + '방면'은 아래 줄(작게) */
+.subway-line-list-time-cell { 
+  min-width: 0; 
+}
+ 
+.subway-line-list-time-cell .time-dest {
+  display: block;
+  white-space: nowrap;       /* 카드가 줄어도 항상 한 줄 */
+  overflow: hidden;
+  text-overflow: ellipsis;   /* 길면 말줄임 */
+  line-height: 1.2;
+}
+
+.subway-line-list-time-cell .time-dir-tag {
+  display: block;            /* 바로 아래 줄에 떨어지게 */
+  font-size: 11px;
+  opacity: .7;
+  line-height: 1.1;
+  margin-top: 2px;
+}
+
+/* 헤더(역명/요일)도 살짝 압축 */
+.subway-line-list-time-header-title {
+  font-size: 15px;
+  line-height: 2.4;
+}
+.subway-line-list-time-day-btn {
+  padding: 5px 9px;
+  font-size: 12px;
+}
+
+.subway-line-list-time-empty { 
+  text-align: center;
+  padding: 16px; 
+  color: #9ca3af; 
+}
+
+/* =========== 반응형 =========== */
+@media (min-width: 667px) {
+  .subway-line-list-left { height: 500px; }
+  .subway-line-list-map  { height: 500px; }
+  .subway-line-list-time-box { 
+    min-width: 0;
+    height: 60vh;
+    min-height: 360px; 
+  }
+  .subway-line-list-time-row-compact {
+    grid-template-columns: 72px 1fr; /* 더 좁은 폭에서도 맞추기 */
+    height: 42px;
+  }
+  .subway-line-list-time-cell-strong { 
+    font-size: 14px; 
+  }
+  .subway-line-list-time-two-col { 
+    gap: 12px; 
+    font-size: 13px; 
+  }
+  .subway-line-list-time-col-title { 
+    font-size: 12.5px; 
+  }
+
+}
+
+@media (max-width: 667px){
+  .subway-line-list-left { 
+    height: auto; 
+  }
+  .subway-line-list-results {
+    max-height: 60vh; 
+    min-height: 0; 
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 390px) {
+  .subway-line-list-time-row-compact {
+    grid-template-columns: 64px 1fr;
+    height: 40px;
+  }
+  .subway-line-list-time-cell-strong { 
+    font-size: 13px; 
+  }
+  .subway-line-list-time-two-col { 
+    font-size: 12.5px; 
+  }
+}

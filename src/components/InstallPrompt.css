@@ -7,13 +7,14 @@
   gap: 20px;
   height: 150px;
   position: fixed;
-  bottom: 95px;
+  bottom: 65px;
   left: 0;
   width: 100%;
   padding: 30px;
   box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
+  z-index: 1000;
 }
 
 .prompt-info {

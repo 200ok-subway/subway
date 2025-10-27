@@ -15,12 +15,12 @@ export default defineConfig({
         '/icons/icon-180.png',
         '/icons/icon-192.png',
         '/icons/icon-512.png',
-        '/base/subwaylogo.png',
+        '/base/seoulwaylogo.png',
       ],
       manifest: {
-        name: 'My Subway',  // PWA 애플리케이션의 이름 (설치 배너에 표시)
-        short_name: 'My Subway', // 홈 화면 아이콘 아래에 표시될 이름
-        description: 'My Subway', // 앱 설명
+        name: 'SEOULWAY',  // PWA 애플리케이션의 이름 (설치 배너에 표시)
+        short_name: 'SEOULWAY', // 홈 화면 아이콘 아래에 표시될 이름
+        description: '누구나 쉽고 빠르게, 심플하고 감각적인 지하철을 만나다. SEOULWAY', // 앱 설명
         theme_color: '#54DCC1', // 브라우저 UI 테마 색상
         background_color: '#2c313b', //기본 배경색
         lang: 'ko',                     // 앱의 언어 설정 (기본 언어)

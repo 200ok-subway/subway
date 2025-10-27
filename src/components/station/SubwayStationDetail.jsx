@@ -1,263 +1,227 @@
-import { useEffect, useMemo, useState, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import "./SubwayStationDetail.css";
+import { useParams } from 'react-router-dom';
+import './SubwayStationDetail.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { realtimeArrivalsIndex, upFirstLastTimesIndex, downFirstLastTimesIndex } from '../../store/thunks/subwayStationDetailThunk.js';
+import { clearState } from '../../store/slices/subwayStationDetailSlice.js';
 
-// thunks
-import { stationIndex } from "../../store/thunks/subwayStationListThunk.js";
-import { stationRealtimeIndex, firstLastByLine } from "../../store/thunks/subwayStationDetailThunk.js";
-
-// 방면 데이터 
-import stationNameDict from "../../data/stationNameDict.js";
-
-/* ========== 유틸 ========== */
-
-
-
-// **bj T 코드 리뷰 -> 참고하세요 디테일 수정하세요오오오옹
-// useEffect(() => {
-//   // 실시간 도착정보 조회
-//   // 첫차 막차 정보 조회
-//   // 파싱한 역정보
-//   // 인터벌
-
-//   return 인터벌삭제
-// }, []);
-
-
-
-
-/**
- * 호선명을 정규화합니다. 예) "01호선" → "1호선", "2호선" → "2호선", "경의선" → "경의선"
- * 
- * @param {string} v - 호선명
- * @returns {string} - 정규화된 호선명
- */
-const normalizeLine = (v) => {
-  const s = String(v ?? "").trim();
-  const m = s.match(/^0?([1-9])호선$/);
-  return m ? `${m[1]}호선` : s;
-};
-// "1호선" → "01호선"(API)
-const toApiLine = (v) => {
-  const m = String(v ?? "").match(/^([1-9])호선$/);
-  return m ? `0${m[1]}호선` : String(v ?? "");
-};
-// "2호선" 등 라인 토큰 판별
-const isLineToken = (t) => /^0?[1-9]호선$/.test(String(t ?? "").trim());
-
-// 호선 → subwayId 매핑
-const LINE_TO_ID = {
-  "1호선":"1001","2호선":"1002","3호선":"1003","4호선":"1004",
-  "5호선":"1005","6호선":"1006","7호선":"1007","8호선":"1008","9호선":"1009",
-};
-
-// "방면" 라벨 계산
-function pickDirectionNames(dict, selectedLine, stationName, realtimeUp, realtimeDown){
-  const sid  = LINE_TO_ID[selectedLine] || "";
-  const list = dict.filter(d => d.subwayId === sid);
-  const idx  = list.findIndex(d => d.statnNm === stationName);
-
-  let upName   = idx > 0 ? list[idx-1]?.statnNm : list[0]?.statnNm;
-  let downName = idx >= 0 && idx < list.length-1 ? list[idx+1]?.statnNm : list.at(-1)?.statnNm;
-
-  const parseHead = (row) => {
-    const s = String(row?.trainLineNm ?? "");
-    const m = s.match(/(.+?)행/); // "구로행" → "구로"
-    return m ? m[1] : "";
-  };
-  if (!upName   && realtimeUp[0])   upName   = parseHead(realtimeUp[0])   || upName;
-  if (!downName && realtimeDown[0]) downName = parseHead(realtimeDown[0]) || downName;
-
-  return {
-    upLabel:   upName   ? `${upName} 방면`   : "상행",
-    downLabel: downName ? `${downName} 방면` : "하행",
-  };
+// 평일:1, 토요일:2, 휴일/일요일:3 로 바꾸기
+function dayCode() {
+  const d = new Date().getDay(); // 0=일, 6=토
+  if (d === 0) return 3;  // 휴일/일요일
+  if (d === 6) return 2;  // 토요일
+  return 1;               // 평일
 }
 
-/* ========== 컴포넌트 ========== */
+/* ====================== 컴포넌트 ====================== */
 function SubwayStationDetail() {
+  const { stationId, stationLine, stationNm } = useParams();
   const dispatch = useDispatch();
 
-  // ✅ name/line(신형), stationId(호환) 모두 받기
-  const { name, line, stationId } = useParams();
+  // params
+  const lineNum =stationLine.replace(/^0+/,''); // "01호선" -> "1호선"
+  const day = dayCode();                          // 평일=1, 토=2, 휴일/일=3
+  const stationName = stationNm.endsWith("역") ? stationNm.slice(0, -1) : stationNm;
 
-  // 파라미터 디코딩
-  let stationName = name ? decodeURIComponent(name) : (stationId ? decodeURIComponent(stationId) : "");
-  let initialLine = line ? normalizeLine(decodeURIComponent(line)) : "";
+  const realtimeArrivalList = useSelector(state => state.subwayStationDetail.realtimeArrivalList);
+  const upFirstLastTimesList = useSelector(state => state.subwayStationDetail.upFirstLastTimesList);
+  const downFirstLastTimesList = useSelector(state => state.subwayStationDetail.downFirstLastTimesList);
 
-  // ✅ 구형 "/stationdetail/2호선 서울대입구" 처리를 위한 자동 분리
-  if (!initialLine && stationName.includes(" ")) {
-    const [t1, ...rest] = stationName.split(" ");
-    if (isLineToken(t1)) {
-      initialLine = normalizeLine(t1);
-      stationName = rest.join(" ");
+  // ------- Unmount 처리 -------
+  useEffect(() => {
+    // 도착 정보 획득 할때 현재 호선을 아규먼트로 전달
+    dispatch(realtimeArrivalsIndex(stationName));
+
+    // 첫차,막차 정보 획득
+    dispatch(upFirstLastTimesIndex({lineNum, day, stationId}));
+    dispatch(downFirstLastTimesIndex({lineNum, day, stationId}));
+
+    return () => {
+      dispatch(clearState());
     }
+  }, []);
+
+  // ------- 도착 정보 처리 -------
+  const [upTrainLineName, setUpTrainLineName] = useState('');
+  const [downTrainLineName, setDownTrainLineName] = useState('');
+  const [upArrivalInfo, setUpArrivalInfo] = useState([]);
+  const [downArrivalInfo, setDownArrivalInfo] = useState([]);
+
+  useEffect(() => {
+    let tmpUpTrainLineName = '';
+    let tmpDownTrainLineName = '';
+    const tmpUpArrivalInfo = [];
+    const tmpDownArrivalInfo = [];
+    const line = `100${lineNum.replace('호선', '')}`;
+
+    let upCount = 0;
+    let downCount = 0;
+
+    for (const item of realtimeArrivalList) {
+      if(line !== item.subwayId) {
+        continue;
+      }
+
+      // 상행/내선: 최대 2개만
+      if(item.updnLine === '상행' || item.updnLine === '내선') {
+        if (upCount < 2) {
+          tmpUpArrivalInfo.push(item);
+          upCount++;
+          if(!tmpUpTrainLineName) {
+            tmpUpTrainLineName = formatTrainLineNm(item.trainLineNm, 1);
+          }
+        }
+      } 
+      // 하행/외선: 최대 2개만
+      else {
+        if (downCount < 2) {
+          tmpDownArrivalInfo.push(item);
+          downCount++;
+          if (!tmpDownTrainLineName) {
+            tmpDownTrainLineName = formatTrainLineNm(item.trainLineNm, 1);
+          }
+        }
+      }
+
+      // 두 방향 모두 2개씩 모이면 종료
+      if (upCount >= 2 && downCount >= 2) break;
+    }
+
+    setUpTrainLineName(tmpUpTrainLineName);
+    setDownTrainLineName(tmpDownTrainLineName);
+    setUpArrivalInfo(tmpUpArrivalInfo);
+    setDownArrivalInfo(tmpDownArrivalInfo);
+  }, [realtimeArrivalList]);
+
+  useEffect(() => {
+    const upIntervalId = setInterval(() => {
+      setUpArrivalInfo(formatObjectIntervalArrivalTime(upArrivalInfo));
+    }, 1000);
+    const downIntervalId = setInterval(() => {
+      setDownArrivalInfo(formatObjectIntervalArrivalTime(downArrivalInfo));
+    }, 1000);
+
+    return () => {
+      clearInterval(upIntervalId);
+      clearInterval(downIntervalId);
+    }
+  }, [upArrivalInfo, downArrivalInfo]);
+
+  function formatObjectIntervalArrivalTime(arrivalInfo) {
+    if (arrivalInfo.length > 0) {
+      const copyArrivalInfo = JSON.parse(JSON.stringify(arrivalInfo));
+      for (const item of copyArrivalInfo) {
+        const tmpParse = parseInt(item.barvlDt);
+        if(!tmpParse || tmpParse === 0) {
+          item.barvlDt = '0';
+          continue;
+        }
+  
+        const parsebarvlDt = parseInt(item.barvlDt) - 1;
+        item.barvlDt = parsebarvlDt.toString();
+      }
+
+      return copyArrivalInfo;
+    }
+
+    return arrivalInfo;
   }
 
-    // 전역 상태
-  const nameList = useSelector((s) => s.station?.nameList ?? []);
-  const realtimeList = useSelector((s) => s.subwayStationDetail?.realtime ?? []);
-  const { firstUp = [], firstDown = [], dow = 1 } = useSelector((s) => s.subwayStationDetail ?? {});
+  function formatTrainLineNm(trainLineNm, idx) {
+    const str = (trainLineNm.split('-')[idx]).trim();
+    let endStr = '';
 
-  // 로컬 상태
-  const [selectedLine, setSelectedLine] = useState("");
-  const [refreshing, setRefreshing]     = useState(false);
-  const [lastUpdated, setLastUpdated]   = useState(null);
-  const intervalRef = useRef(null);
-
-  // 리스트 없으면 한 번 로드(직진입 대비)
-  useEffect(() => { if (!nameList.length) dispatch(stationIndex()); }, [dispatch, nameList.length]);
-
-  // 현재 역의 호선 칩(중복 제거 + 숫자순)
-  const lineOptions = useMemo(() => {
-    return Array.from(
-      new Set(
-        (nameList || [])
-          .filter((i) => String(i.name) === stationName)
-          .map((i) => normalizeLine(i.line))
-          .filter(Boolean)
-      )
-    ).sort((a, b) => parseInt(a) - parseInt(b));
-  }, [nameList, stationName]);
-
-  // 초기 라인 선택
-  useEffect(() => {
-    if (!selectedLine) {
-      if (initialLine) setSelectedLine(initialLine);
-      else if (lineOptions.length) setSelectedLine(lineOptions[0]);
+    if(idx === 0) {
+      endStr = '행';
+    } else {
+      endStr = '방면';
     }
-  }, [initialLine, lineOptions, selectedLine]);
 
-  // 실시간 호출
-  const fetchRealtime = async () => {
-    if (!stationName) return;
-    try {
-      setRefreshing(true);
-      await dispatch(stationRealtimeIndex(stationName));
-      setLastUpdated(new Date());
-    } finally {
-      setRefreshing(false);
+    return str.endsWith(endStr) ? str : `${str}${endStr}`;
+  }
+
+  function formatArrivalString(barvlDt) {
+    let formatStr = '-';
+    
+    if(!barvlDt) {
+      return formatStr;
     }
-  };
-  useEffect(() => { fetchRealtime(); }, [stationName]);
 
-  // 자동 갱신(20초)
-  useEffect(() => {
-    intervalRef.current = setInterval(fetchRealtime, 20000);
-    return () => clearInterval(intervalRef.current);
-  }, [stationName]);
+    const parseBarvlDt = parseInt(barvlDt);
 
-  // 첫/막차: 선택 호선으로 (API는 "01호선")
-  useEffect(() => {
-    if (selectedLine) {
-      dispatch(firstLastByLine({ line: toApiLine(selectedLine), dow }));
+    if(parseBarvlDt > 0) {
+      const minute = Math.floor(parseBarvlDt / 60).toString();
+      const second = (parseBarvlDt % 60).toString();
+      formatStr = `${minute.padStart(2, '0')}:${second.padStart(2, '0')} 후 도착`;
+    } else {
+      formatStr = '도착';
     }
-  }, [dispatch, selectedLine, dow]);
 
-  /* === 화면 가공 === */
-  const realtime = Array.isArray(realtimeList) ? realtimeList : [];
-
-  // 선택 호선 필터: subwayNm("01호선") 또는 subwayId(1001~1009) 둘 다 대응
-  const filtered = realtime.filter((r) => {
-    if (!selectedLine) return true;
-    const lineNm = r?.subwayNm ? normalizeLine(r.subwayNm) : "";
-    if (lineNm) return lineNm === selectedLine;
-    const idMap = {1001:"1호선",1002:"2호선",1003:"3호선",1004:"4호선",1005:"5호선",1006:"6호선",1007:"7호선",1008:"8호선",1009:"9호선"};
-    const fromId = idMap[Number(r?.subwayId)] || "";
-    return fromId === selectedLine;
-  });
-
-  const realtimeUp   = filtered.filter(r => String(r?.updnLine||"").includes("상행") || String(r?.updnLine||"").includes("내선"));
-  const realtimeDown = filtered.filter(r => String(r?.updnLine||"").includes("하행") || String(r?.updnLine||"").includes("외선"));
-
-  const etaText = (row) => {
-    const n = Number(row?.barvlDt);
-    if (Number.isFinite(n)) {
-      if (n <= 30) return "곧 도착";
-      const m = Math.floor(n / 60);
-      const s = n % 60;
-      return `${m}분 ${s}초 후`;
-    }
-    return "-";
-  };
-  const fmtKTime = (hhmm) => (!hhmm || hhmm.length < 4) ? "-" : `${hhmm.slice(0,2)}시 ${hhmm.slice(2,4)}분`;
-
-  const upRow   = Array.isArray(firstUp)   ? firstUp[0]   : null;
-  const downRow = Array.isArray(firstDown) ? firstDown[0] : null;
-
-  // 방면 라벨
-  const { upLabel, downLabel } = useMemo(
-    () => pickDirectionNames(stationNameDict, selectedLine, stationName, realtimeUp, realtimeDown),
-    [selectedLine, stationName, realtimeUp, realtimeDown]
-  );
-
-  // 화면 텍스트
-  const lastUpdatedText = lastUpdated ? `업데이트: ${lastUpdated.toLocaleTimeString()}` : "";
-  const upEta     = realtimeUp[0]   ? etaText(realtimeUp[0])   : "-";
-  const downEta   = realtimeDown[0] ? etaText(realtimeDown[0]) : "-";
-  const upFirst   = upRow   ? fmtKTime(upRow.FSTT_HRM)  : "-";
-  const upLast    = upRow   ? fmtKTime(upRow.LSTTM_HRM) : "-";
-  const downFirst = downRow ? fmtKTime(downRow.FSTT_HRM)  : "-";
-  const downLast  = downRow ? fmtKTime(downRow.LSTTM_HRM) : "-";
+    return formatStr;
+  }
+  
+  function formatHHmmsstoHHss(time) {
+    return time ? `${time.substring(0, 2)}:${time.substring(2, 4)}` : '-';
+  }
 
   return (
-    <div className="detail-root" style={{ '--bottom-inset': '150px' }}>
-
-
-      {/* 상단 타이틀 */}
-      <div className="detail-titlebox">
-        <div className="detail-colorbar" />
-        <div className="detail-titlestack">
-          <h1 className="detail-title-name">{stationName || "역 불러오는 중..."}</h1>
-          {selectedLine && <div className="detail-linechip">{normalizeLine(selectedLine)}</div>}
-        </div>
-        <div className="detail-colorbar" />
+    <div className="subway-station-detail-scope"> 
+      <div className="subway-station-detail__title">
+  <div className="detail-switch-center">
+        {lineNum && (
+          <span className="detail-switch-linebadge">
+            {lineNum}
+          </span>
+        )}
+        <span className="detail-switch-current">
+          { stationNm || '역 이름 불러오는 중…' }
+        </span>
       </div>
-
-      {/* 상/하행 섹션 */}
-      <div className="detail-sections">
-        {/* 상행 */}
-        <section className="detail-section">
-          <div className="detail-divider">
-            <span className="detail-line" />
-            <div className="detail-direction-badge">{upLabel}</div>
-            <span className="detail-line none" />
-          </div>
-
-          <div className="detail-card">
-            <div className="detail-row">
-              <h3>상행</h3>
-              <p><span className="detail-eta">{upEta}</span> 도착</p>
-            </div>
-            <div className="detail-row"><h4>첫차</h4><p>{upFirst}</p></div>
-            <div className="detail-row"><h4>막차</h4><p>{upLast}</p></div>
-          </div>
-        </section>
-
-        {/* 하행 */}
-        <section className="detail-section">
-          <div className="detail-divider">
-            <span className="detail-line none" />
-            <div className="detail-direction-badge">{downLabel}</div>
-            <span className="detail-line" />
-          </div>
-
-          <div className="detail-card">
-            <div className="detail-row">
-              <h3>하행</h3>
-              <p><span className="detail-eta">{downEta}</span> 도착</p>
-            </div>
-            <div className="detail-row"><h4>첫차</h4><p>{downFirst}</p></div>
-            <div className="detail-row"><h4>막차</h4><p>{downLast}</p></div>
-          </div>
-        </section>
-
-    
-      </div>
-
     </div>
-  );
+
+    <div className="detail-stage">
+      <div className="detail-root">
+        <div className="detail-two-col">
+          <section className="detail-section">
+            {/* 방면표시 */}
+            <div className='direction-label'>{upTrainLineName}</div>
+            <div className="detail-card">
+              {upArrivalInfo.length > 0 && upArrivalInfo.map(item => (
+                <div key={item.ordkey}>
+                  <div>
+                    {`${formatTrainLineNm(item.trainLineNm, 0)}`}
+                    <span className='detail-updn'>{`(${item.updnLine})`}</span>
+                    {` ${formatArrivalString(item.barvlDt)}`}
+                  </div>
+                </div>
+              ))}
+              <div className="detail-row"><h4>첫차</h4><p>{formatHHmmsstoHHss(upFirstLastTimesList[0]?.FSTT_HRM)}</p></div>
+              <div className="detail-row"><h4>막차</h4><p>{formatHHmmsstoHHss(upFirstLastTimesList[0]?.LSTTM_HRM)}</p></div>
+            </div>
+          </section>
+
+          <section className="detail-section">
+            {/* 방면표시 */}
+            <div className='direction-label'>{downTrainLineName}</div>
+            <div className="detail-card">
+              {downArrivalInfo.length > 0 && downArrivalInfo.map(item => (
+                <div key={item.ordkey}>
+                  <div>
+                    {`${formatTrainLineNm(item.trainLineNm, 0)}`}
+                    <span className='detail-updn'>{`(${item.updnLine})`}</span>
+                    {` ${formatArrivalString(item.barvlDt)}`}
+                  </div>
+                </div>
+              ))}
+              <div className="detail-row"><h4>첫차</h4><p>{formatHHmmsstoHHss(downFirstLastTimesList[0]?.FSTT_HRM)}</p></div>
+              <div className="detail-row"><h4>막차</h4><p>{formatHHmmsstoHHss(downFirstLastTimesList[0]?.LSTTM_HRM)}</p></div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+);
 }
 
 export default SubwayStationDetail;

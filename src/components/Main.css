@@ -1,39 +1,53 @@
-.main-logoImgBox{
-    height:284px;
-    width:284px;
-    margin: 40px auto;
-    
-}
-.main-logoImgBox:hover{
-   animation: spinY 2s linear infinite;
-
-}
-@keyframes spinY {
-  from { transform: rotateY(0deg); }
-  to   { transform: rotateY(360deg); }
+.main-logo-box {
+  height: 284px;
+  width: 284px;
+  margin: 24px auto;
 }
 
-.main-logoImgBox>img{
-    width:284px;
+.main-button-wrap{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
 }
-.main-buttonWrap{
-   width: 340px;
-   margin: 50px auto;
+
+.main-button {
+  margin: auto;
+  cursor: pointer;
+  max-width: 340px;
+  height: 100px;
+  border-radius: 50px;
+  background: #fff;
+  font-weight: 600;
+  font-size: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  padding: 30px;
+  position: relative;
+  overflow: hidden;
+  border: 1.5px solid rgba(84, 220, 193, .18);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
-.main-button{
-    cursor: pointer;
-    max-width: 340px;
-    height:100px;
-    border-radius: 50px;
-    background-color: white;
-    font-weight: 600;
-    font-size: 35px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
-    
+
+.main-button:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 7px 10px rgba(84, 220, 193, .22);
+  border-color: rgba(84, 220, 193, .42);
 }
-.main-button:hover{
-    transform: translateY(-10px);
+
+.main-button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:rgba(84, 220, 193, .18);
+  opacity: 0;
+  transition: opacity .18s ease;
 }
+
+.main-button:hover::after { 
+  opacity: .10; 
+} 

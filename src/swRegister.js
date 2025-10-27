@@ -3,7 +3,7 @@ const swRegister = () => {
  if('serviceWorker' in navigator) {
    navigator.serviceWorker
     .register(
-        '/my-sw.js',  // ← 반드시 루트 경로. public(웹서버 루트 디렉토리)/sw.js 를 가리킴
+        '/my-sw.js',  // ← 반드시 루트 경로. public/sw.js 를 가리킴
         {
           scope: '/',  
         }

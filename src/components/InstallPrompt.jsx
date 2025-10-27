@@ -27,7 +27,7 @@ function InstallPrompt() {
       window.removeEventListener("beforeinstallprompt", onInstallPrompt); // 리스너 등록 해제
       window.removeEventListener("appinstalled", onInstalled); // 리스너 등록 해제
     };
-  }, []); // 의존성 배열이 빈 배열 → 마운트/언마운트에 한 번만 실행돼요.
+  }, []); // 의존성 배열이 빈 배열 → 마운트/언마운트에 한 번만 실행됨
 
 	 // 설치 버튼 클릭 핸들러 : 설치 프롬프트 띄우는 유일한 타이밍=버튼 클릭 뿐이기에
   const handleInstall = async() => {  // 버튼 클릭 시 실행
@@ -51,8 +51,8 @@ function InstallPrompt() {
        (deferredPrompt && dialFlg) && 
        (
         <div className="prompt-container">
-            <p className="prompt-info">SUBWAY</p>
-            <button className="prompt-btn" onClick={handleInstall} type="button"> DownLoad now </button>
+            <p className="prompt-info">SEOULWAY</p>
+            <button className="prompt-btn" onClick={handleInstall} type="button">DownLoad</button>
         </div>
        )
      }

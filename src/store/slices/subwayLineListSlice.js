@@ -1,0 +1,31 @@
+import { createSlice } from "@reduxjs/toolkit";
+import { getSubwayList } from "../thunks/subwayLineListThunk.js";
+import { get1To9LineOnOrigin } from "../../utils/listSubwayGeom1to9Util.js";
+ 
+const initialState = {
+  loading: false,
+  error: null,
+  stationList: [], // 전체  1~9호선 역 리스트
+  searchList: [],  // 검색 결과 리스트
+};
+
+const subwayLineListSlice = createSlice({
+  name: "subwayLineList",
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(getSubwayList.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getSubwayList.fulfilled, (state, action) => {
+        state.loading = false;
+        state.stationList = get1To9LineOnOrigin(action.payload);
+      })
+      .addCase(getSubwayList.rejected, (state) => {
+        state.loading = false;
+      });
+  },
+});
+
+export default subwayLineListSlice.reducer;
