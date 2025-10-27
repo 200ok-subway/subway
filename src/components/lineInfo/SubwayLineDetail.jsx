@@ -47,7 +47,7 @@ export default function SubwayLineDetail() {
   
     return (
     <>
-    <div className="line-detail-main-title"><h1>지하철역 편의시설 정보</h1></div>
+    <div className="line-detail-main-title"><h1>역 위치 및 시간표</h1></div>
 
     <div className="line-detail">
       {/* 타이틀 */}
