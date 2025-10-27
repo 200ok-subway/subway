@@ -22,9 +22,8 @@ const subwayLineListSlice = createSlice({
         state.loading = false;
         state.stationList = get1To9LineOnOrigin(action.payload);
       })
-      .addCase(getSubwayList.rejected, (state, action) => {
+      .addCase(getSubwayList.rejected, (state) => {
         state.loading = false;
-        console.error(action.error);
       });
   },
 });

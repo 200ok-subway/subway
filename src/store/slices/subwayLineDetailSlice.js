@@ -23,9 +23,8 @@ const subwayLineDetailSlice = createSlice({
         state.loading = false;
         state.stationDetail =  (action.payload);
       })
-      .addCase(getSubwayDetail.rejected, (state, action) => {
+      .addCase(getSubwayDetail.rejected, (state) => {
         state.loading = false;
-        console.error(action.error);
       })
 
       // 주소/전화 (신규)
@@ -36,9 +35,8 @@ const subwayLineDetailSlice = createSlice({
         state.loading = false;
         state.stationAddrTel = (action.payload);
       })
-      .addCase(getSubwayTelAndAddr.rejected, (state, action) => {
+      .addCase(getSubwayTelAndAddr.rejected, (state) => {
         state.loading = false;
-        console.error(action.error);
       });
   },
 });

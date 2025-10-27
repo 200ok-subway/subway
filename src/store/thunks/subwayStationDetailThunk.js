@@ -38,11 +38,9 @@ const downFirstLastTimesIndex = createAsyncThunk(
       const url = `${import.meta.env.VITE_OPEN_API_BASE_URL}${import.meta.env.VITE_OPEN_API_KEY}/json/SearchFirstAndLastTrainbyLineServiceNew/1/1/${lineNum}/2/${day}/${stationId}`;
 
       const { data } = await axios.get(url);
-      console.log(data);
         
       return data.SearchFirstAndLastTrainbyLineServiceNew.row;
     } catch(e) {
-      console.error(e.message);
       throw thunkAPI.rejectWithValue(e);
     }
   }

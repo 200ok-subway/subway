@@ -58,7 +58,6 @@ function SubwayStationDetail() {
     let downCount = 0;
 
     for (const item of realtimeArrivalList) {
-      // console.log(lineNum, line, item.subwayId);
       if(line !== item.subwayId) {
         continue;
       }
