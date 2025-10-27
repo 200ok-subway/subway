@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";    
 import { getSubwayDetail } from "../../store/thunks/subwayLineDetailThunk.js";
 import { getSubwayTelAndAddr } from "../../store/thunks/subwayLineDetailTelAndAddrThunk.js";
-import { removeParenAndRemoveYeok, removeParenAndMinusZero } from "../../utils/subwaySearchUtil.js";
+import { removeParenAndRemoveYeok, removeParenAndMinusZero } from "../../utils/subwaySearchUtils.js";
 
 
 const YN = (v) => (String(v ?? "").trim().toUpperCase() === "Y" ? "Y" : "N");
