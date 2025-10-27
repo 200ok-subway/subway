@@ -130,7 +130,6 @@
   display: grid;
   place-items: center;
   border-radius: 50%;
-  /* background: rgb(105, 100, 100); */
   font-size: 15px;
 }
 
@@ -236,7 +235,6 @@
 }
 
 .line-detail-fac.on .line-detail-fac-ico { 
-  /* background: rgba(84,220,193,.16); */
   color: #e6fffa; 
 }
 
