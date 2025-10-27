@@ -9,7 +9,6 @@ import axios from "axios";
       // const url=`http://openAPI.seoul.go.kr:8088/424a49475a6d696a363461576f5178/json/TbSeoulmetroStConve/1/290`
     
       const res = await axios.get(url);
-      console.log(res.data);
       return res.data.TbSeoulmetroStConve.row;
     } catch(e) {
       thunkAPI.rejectWithValue(e.message);   

@@ -32,11 +32,10 @@ const subwayStationDetailSlice = createSlice({
       })
       .addMatcher(
         action => action.type.startsWith('subwayStationDetailSlice') && action.type.endsWith('/rejected'),
-        (state, action) => {
+        (state) => {
           state.realtimeArrivalList = [];
           state.upFirstLastTimesList = [];
           state.downFirstLastTimesList = [];
-          console.error('에러에러.', action.error);
           alert('현재 서울교통공사에서 정보를 받아올 수 없습니다.');
         }
       );

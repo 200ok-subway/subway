@@ -39,7 +39,6 @@ import axios from "axios";
 
       const timeurl = `${url}/${seg}`;
       const res = await axios.get(timeurl);
-      console.log(res.data);
       return res?.data?.getTrainSch?.row ?? res?.data?.response?.body?.items?.item ?? [];
     } catch (e) {
       thunkAPI.rejectWithValue(e.message);   

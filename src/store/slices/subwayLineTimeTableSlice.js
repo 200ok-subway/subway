@@ -20,9 +20,8 @@ const subwayLineTimeTableSlice = createSlice({
         state.loading = false;
         state.rows = action.payload;
       })
-      .addCase(getLineTimeTable.rejected, (state, action) => {
+      .addCase(getLineTimeTable.rejected, (state) => {
         state.loading = false;
-        console.error(action.error);
       });
   },
 });

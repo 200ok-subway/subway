@@ -4,7 +4,7 @@ import axios from "axios";
 export const subwayStationIndex = createAsyncThunk(
   "subwayStationListSlice/subwayStationIndex",
   async () => {
-    const base = `http://openapi.seoul.go.kr:8088${import.meta.env.VITE_OPEN_API_KEY}/json/SearchSTNBySubwayLineInfo`;
+    const base = `${import.meta.env.VITE_OPEN_API_BASE_URL}${import.meta.env.VITE_OPEN_API_KEY}/json/SearchSTNBySubwayLineInfo`;
     const tasks = [];
     for (let i = 1; i <= 9; i++) {
       const line = `${String(i).padStart(2, "0")}호선`; // ✅ "02호선" 형식 맞추기
