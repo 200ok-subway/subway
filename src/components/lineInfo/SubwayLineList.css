@@ -193,13 +193,13 @@
   display: grid;
   grid-template-rows: auto 1fr;        /* 헤더 + 본문 */
   width: 100%;
-  height: 500px;
+  max-height: 500px;
   background: rgba(48, 54, 68, 0.5);
   border-radius: 12px;
   box-sizing: border-box;
-  overflow: hidden; 
+  overflow: auto;
   line-height: 1.35;
-  min-width: 400px;        /* ← 추가: 글자 간격 깨지기 전에 접기 */
+  scrollbar-gutter: stable both-edges; /* 스크롤 겹침 방지(지원 브라우저) */
 }
 
 /* 헤더(역명/요일) */
@@ -249,7 +249,8 @@
   color: #fcfcfc;
   font-weight: 500;
   overflow: auto;
-  padding-right: 8px;      
+  padding-right: 8px;    
+  padding-bottom: 18px;  
 }
 
 /* 각 컬럼: 제목 고정 + 리스트 스크롤 */
@@ -257,6 +258,7 @@
   display: flex;
   flex-direction: column;
   min-height: 0;
+  font-size: 14px;  
 }
 
 /* 방향 제목: 고정(sticky) */
@@ -269,6 +271,7 @@
   font-weight: 600;
   text-align: left;
   border-bottom: 1px solid rgba(255,255,255,.12);
+  font-size: 13px;
 }
 
 /* 리스트 */
@@ -282,15 +285,47 @@
 /* 한 행 */
 .subway-line-list-time-row-compact{
   display: grid;
-  grid-template-columns: 92px 1fr;     /* 좌: 시간칩 고정폭 */
+  grid-template-columns: 82px 1fr;     /* 좌: 시간칩 고정폭 */
   align-items: center;
-  height: 48px;
-  column-gap: 12px;
+  height: 44px;
+  column-gap: 10px;
   background: transparent;
 }
 
 .subway-line-list-time-cell-strong { 
-  font-weight: 800; 
+  font-weight: 700; 
+  font-size: 15px;
+}
+
+/* 목적지 한 줄 + '방면'은 아래 줄(작게) */
+.subway-line-list-time-cell { 
+  min-width: 0; 
+}
+ 
+.subway-line-list-time-cell .time-dest {
+  display: block;
+  white-space: nowrap;       /* 카드가 줄어도 항상 한 줄 */
+  overflow: hidden;
+  text-overflow: ellipsis;   /* 길면 말줄임 */
+  line-height: 1.2;
+}
+
+.subway-line-list-time-cell .time-dir-tag {
+  display: block;            /* 바로 아래 줄에 떨어지게 */
+  font-size: 11px;
+  opacity: .7;
+  line-height: 1.1;
+  margin-top: 2px;
+}
+
+/* 헤더(역명/요일)도 살짝 압축 */
+.subway-line-list-time-header-title {
+  font-size: 15px;
+  line-height: 2.4;
+}
+.subway-line-list-time-day-btn {
+  padding: 5px 9px;
+  font-size: 12px;
 }
 
 .subway-line-list-time-empty { 
@@ -303,12 +338,48 @@
 @media (min-width: 667px) {
   .subway-line-list-left { height: 500px; }
   .subway-line-list-map  { height: 500px; }
-  .subway-line-list-time-box { height: 500px; }
+  .subway-line-list-time-box { 
+    min-width: 0;
+    height: 60vh;
+    min-height: 360px; 
+  }
+  .subway-line-list-time-row-compact {
+    grid-template-columns: 72px 1fr; /* 더 좁은 폭에서도 맞추기 */
+    height: 42px;
+  }
+  .subway-line-list-time-cell-strong { 
+    font-size: 14px; 
+  }
+  .subway-line-list-time-two-col { 
+    gap: 12px; 
+    font-size: 13px; 
+  }
+  .subway-line-list-time-col-title { 
+    font-size: 12.5px; 
+  }
+
 }
 
 @media (max-width: 667px){
-  .subway-line-list-left { height: auto; }
-  .subway-line-list-results{
-    max-height: 60vh; min-height: 0; overflow-y: auto;
+  .subway-line-list-left { 
+    height: auto; 
+  }
+  .subway-line-list-results {
+    max-height: 60vh; 
+    min-height: 0; 
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 390px) {
+  .subway-line-list-time-row-compact {
+    grid-template-columns: 64px 1fr;
+    height: 40px;
+  }
+  .subway-line-list-time-cell-strong { 
+    font-size: 13px; 
+  }
+  .subway-line-list-time-two-col { 
+    font-size: 12.5px; 
   }
 }

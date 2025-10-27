@@ -87,7 +87,6 @@ export default function SubwayLineList() {
 
   useSelector((s) => s.subwayLineTimeTable);
 
-  // 현재 역의 양옆 이웃만으로 방향 타이틀 생성(간단)
   function getNeighborTitles(lineNmClean, stnNmClean) {
     const normalizeName = (s) => removeParenAndRemoveYeok(String(s));
     const stationNumber = (it) => {
@@ -133,7 +132,6 @@ export default function SubwayLineList() {
 
     Promise.all([fetchByDirection(pair[0]), fetchByDirection(pair[1])])
       .then(([rawA, rawB]) => {
-        // 유틸 사용: 시간 정규화 + 중복 제거
         const rowsA = dedupRows(normalizeTime(Array.isArray(rawA) ? rawA : []));
         const rowsB = dedupRows(normalizeTime(Array.isArray(rawB) ? rawB : []));
 
@@ -166,7 +164,6 @@ export default function SubwayLineList() {
     navigate(`/line-diagrams/${stnNmClean}/${lineNmClean}`);
   };
 
-  // 시간 표시에 사용할 라벨(유틸 정규화된 값 우선)
   const timeLabelOf = (row) =>
     (row && row.tt && row.tt.label) || String((row && row.trainDptreTm) || "").slice(0, 5);
 
@@ -293,9 +290,10 @@ export default function SubwayLineList() {
                           <div className="subway-line-list-time-cell subway-line-list-time-cell-strong">
                             {timeLabelOf(row)}
                           </div>
-                          <div className="subway-line-list-time-cell">
-                            {row.arvlStnNm ? row.arvlStnNm + " 방면" : ""}
-                          </div>
+                            <div className="subway-line-list-time-cell">
+                              <span className="time-dest">{row.arvlStnNm || ""}</span>
+                              {row.arvlStnNm && <span className="time-dir-tag">방면</span>}
+                            </div>
                         </li>
                       ))}
                     </ul>
@@ -315,9 +313,10 @@ export default function SubwayLineList() {
                           <div className="subway-line-list-time-cell subway-line-list-time-cell-strong">
                             {timeLabelOf(row)}
                           </div>
-                          <div className="subway-line-list-time-cell">
-                            {row.arvlStnNm ? row.arvlStnNm + " 방면" : ""}
-                          </div>
+                            <div className="subway-line-list-time-cell">
+                              <span className="time-dest">{row.arvlStnNm || ""}</span>
+                              {row.arvlStnNm && <span className="time-dir-tag">방면</span>}
+                            </div>
                         </li>
                       ))}
                     </ul>

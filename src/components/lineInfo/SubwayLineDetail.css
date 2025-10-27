@@ -202,9 +202,6 @@
 }
 
 
-/* ===== Presence(Y) → Green highlight / Absence → Dark ===== */
-
-/* 부드러운 전환 */
 .line-detail-fac,
 .line-detail-a11y-item {
   transition: background .2s ease, border-color .2s ease,
@@ -215,8 +212,6 @@
 .line-detail-fac.on {
   border-color: rgba(84,220,193,.55);
   background: rgba(84,220,193,.08);
-  box-shadow: 0 0 0 2px rgba(84,220,193,.22) inset,
-              0 8px 20px rgba(84,220,193,.12);
 }
 .line-detail-fac.on .line-detail-fac-status { 
   color: #54DCC1;
@@ -239,27 +234,13 @@
 .line-detail-fac.off .line-detail-fac-status,
 .line-detail-fac.unk .line-detail-fac-status { color: #98a2b3; }
 
-/* 버튼 역할을 하는 것이 아니기 때문에 호버 효과는 불필요하다고 판단하여 해당 효과를 뺌 */
-/* 제공만 반짝 호버 */
-/* .line-detail-fac.on:hover {
-  background: rgba(84,220,193,.12);
-  border-color: #54DCC1;
-  transform: translateY(-1px);
-} */
 
 /* 교통약자: ok/no */
 .line-detail-a11y-item.ok {
   border-style: solid;
   border-color: rgba(84,220,193,.55);
   background: rgba(84,220,193,.08);
-  box-shadow: 0 0 0 2px rgba(84,220,193,.22) inset;
 }
-
-/* 버튼 역할을 하는 것이 아니기 때문에 호버 효과는 불필요하다고 판단하여 해당 효과를 뺌 */
-/* .line-detail-a11y-item.ok:hover {
-  background: rgba(84,220,193,.12);
-  transform: translateY(-1px);
-} */
 
 .line-detail-a11y-item.no { 
   opacity: .84; 

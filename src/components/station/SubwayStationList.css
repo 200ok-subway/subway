@@ -46,6 +46,7 @@
   font-size: 20px;
   color:#fff;
   display: flex;
+  border-radius: 16px;
 
   /* ⬇ 아이콘 32px + 텍스트 1fr 그리드로 정렬(항상 같은 시작선) */
   display: grid;

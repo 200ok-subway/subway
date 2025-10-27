@@ -15,7 +15,7 @@ export default defineConfig({
         '/icons/icon-180.png',
         '/icons/icon-192.png',
         '/icons/icon-512.png',
-        '/base/subwaylogo.png',
+        '/base/seoulwaylogo.png',
       ],
       manifest: {
         name: 'SEOULWAY',  // PWA 애플리케이션의 이름 (설치 배너에 표시)

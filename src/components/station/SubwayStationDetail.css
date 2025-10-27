@@ -1,11 +1,11 @@
-/* src/pages/SubwayStationDetail.css (정리본) */
-/* ✅ 이 스코프 안에서만 스타일 적용 */
+/* ===== Scope / Stage ===== */
 .subway-station-detail-scope .detail-stage{
-  min-height: 100vh;
+  /* 모바일/기본: 기존 높이 유지 */
   display: grid;
+  height: 600px;
   align-content: start;
   justify-items: center;
-  padding-top: 1vh;
+  padding: 50px 16px 40px;
   box-sizing: border-box;
   overflow-x: hidden;
 }
@@ -13,127 +13,206 @@
 .subway-station-detail-scope .detail-root{
   width: 100%;
   display: grid;
-  grid-auto-rows: min-content;
-  gap: 12px;
-  color: #ffffff;
+  gap: 16px;
+  color: #f5f7fb;
 }
 
-/* ===== Header (민트 라인 + 현재역 알약) ===== */
-.subway-station-detail-scope .detail-switch{
-  position: relative;
+/* ===== 새 타이틀 바 ===== */
+.subway-station-detail__title{
   width: 100%;
-  padding: 10px 0;
-  display: grid;
-  place-items: center;
+  height: 15px;
+  background-color: #54DCC1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+  margin-bottom: 70px;
+  left: 0;
+  right: 0;
   box-sizing: border-box;
 }
-.subway-station-detail-scope .detail-switch::before{
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  height: 16px;
-  background: #54DCC1;
-  z-index: 0;
-  pointer-events: none;
+.subway-station-detail__title > h1{
+  font-size: 25px;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
 }
-.subway-station-detail-scope .detail-switch-center{
-  position: relative;
-  z-index: 1;
+
+/* 배지+역명 컨테이너 */
+.subway-station-detail__title .detail-switch-center{
   display: inline-flex;
   align-items: center;
-  gap: 14px;
-  background: #ffffff;
-  color: #0d1b1e;
-  padding: 12px 18px;
-  border-radius: 999px;
+  gap: 12px;
+  padding: 10px 16px;
+  border-radius: 16px;
+  background: rgba(85, 104, 100, 0.2);
+  border: 1px solid rgba(255,255,255,.36);
+  box-shadow: 0 6px 18px rgba(0,0,0,.08);
+  -webkit-backdrop-filter: saturate(1.2) blur(2px);
+  backdrop-filter: saturate(1.2) blur(2px);
 }
-.subway-station-detail-scope .detail-switch-linebadge{
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: #54DCC1;
-  color: #000;
+.subway-station-detail__title .detail-switch-current{
+  color: #fff;
   font-weight: 900;
-  font-size: 16px;
-  line-height: 1.1;
+  font-size: clamp(20px, 3.6vw, 26px);
+  letter-spacing: .2px;
   white-space: nowrap;
 }
-.subway-station-detail-scope .detail-switch-current{
-  font-weight: 900;
-  font-size: 34px;
-  letter-spacing: .2px;
+.subway-station-detail__title .detail-switch-linebadge{
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.28);
+  color: #fff;
+  font-weight: 800;
+  font-size: 13px;
+  line-height: 1.1;
+  border: 1px solid rgba(255,255,255,.52);
+  white-space: nowrap;
 }
 
-/* ===== Cards Layout ===== */
+/* ===== 2열 카드 레이아웃 ===== */
 .subway-station-detail-scope .detail-two-col{
   width: 100%;
-  max-width: 980px;
-  margin: 4px auto 0;
+  max-width: 1200px;     /* 기본 */
+  margin: 10px auto 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 26px;
   box-sizing: border-box;
 }
 
-/* 각 섹션(방면 라벨 + 내용 포함하는 박스) */
 .subway-station-detail-scope .detail-section{
   display: grid;
   grid-auto-rows: min-content;
-  gap: 10px;
-  flex: 1 1 300px;
+  gap: 12px;
+  flex: 1 1 380px;       /* 모바일 1칸, 넓으면 2열 */
   min-width: 300px;
   box-sizing: border-box;
-  border: 1px solid rgba(255,255,255,0.20);
-  border-radius: 16px;
-  padding: 12px 10px;
-  background: rgba(255,255,255,0.06);
+  background: #353b46;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 12px;
+  padding: 14px;
 }
 
-/* 섹션 내부 카드 본문 */
+/* 방향 배지 */
+.direction-label{
+  justify-self: start;
+  padding: .44em .9em;
+  border-radius: 999px;
+  background: rgba(84,220,193,.20);
+  color: #54DCC1;
+  font-weight: 800;
+  font-size: 13px;
+  line-height: 1.1;
+  border: 1px solid #54DCC1;
+}
+
+/* 카드 본문 */
 .subway-station-detail-scope .detail-card{
   display: grid;
-  gap: 20px;
-  text-align: center;
+  gap: 10px;
   color: #ffffff;
-  font-size: 20px;
-  padding: 6px 4px;
-  border-radius: 12px;
-  background: transparent;
-  box-sizing: border-box;
+  font-size: 16px;
 }
 
-/* 행 */
-.subway-station-detail-scope .detail-row{
+/* 실시간(상단 리스트) */
+.detail-card > div:not(.detail-row){
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.08);
+  line-height: 1.35;
+  transition: background .18s ease, border-color .18s ease,
+              box-shadow .18s ease, transform .08s ease;
+}
+.detail-card > div:not(.detail-row):hover{
+  background: rgba(84,220,193,.10);
+  border-color: #54DCC1;
+  box-shadow: 0 8px 20px rgba(84,220,193,.18);
+  transform: translateY(-1px);
+}
+.detail-updn{ color:#b8c0cc; margin-left:.25em; }
+
+/* 첫차/막차(하단) */
+.detail-card .detail-row{
   display: flex;
   justify-content: center;
   align-items: baseline;
   gap: 10px;
   box-sizing: border-box;
+  line-height: 1.4;
+  padding: 6px 4px;
 }
-.subway-station-detail-scope .detail-row h4{ margin: 0; font-size: 1em; font-weight: 800; }
-.subway-station-detail-scope .detail-row p{  margin: 0; font-size: 1em; }
-
-/* 방향 배지(간단 회색) */
-.detail-updn {
-  color: #afafaf;
+.detail-card .detail-row h4{ margin: 0; font-size: 0.95em; font-weight: 800; color:#e9eef6; }
+.detail-card .detail-row p { margin: 0; font-size: 0.95em; color:#ffffff; }
+.detail-card .detail-row:first-of-type{
+  margin-top: 8px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,.16);
+  position: relative;
 }
-
-.direction-label {
-  display: inline-flex;
-  justify-self: start;     /* 그리드에서 가로로 늘어지지 않게 */
-  align-self: start;       /* 세로도 시작 지점에 붙이기(옵션) */
-  width: max-content;      /* 글자수만큼만 너비 */
-  padding: .35em .8em;
-  border-radius: 9999px;
-  background: #54DCC1;     /* 민트 */
+.detail-card .detail-row:first-of-type::before{
+  position: absolute;
+  top: -10px;
+  left: 10px;
+  transform: translateY(-100%);
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 700;
   color: #0d1b1e;
-  font-weight: 800;
-  font-size: inherit;      /* 부모 글자 크기 따라감 */
-  line-height: 1.1;
-  white-space: nowrap;
+  background: #54DCC1;
+  border: 1px solid #42cbb1;
+  border-radius: 999px;
+}
+
+/* 접근성 */
+.detail-card > div:not(.detail-row):focus{
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(84,220,193,.55);
+}
+
+/* ===== Desktop 확장(웹 전용) ===== */
+@media (min-width: 1024px){
+  /* 화면이 클수록 '두번째 스샷'처럼 넉넉한 폭/높이 */
+  .subway-station-detail-scope .detail-stage{
+    height: auto;                              /* 고정 높이 해제 */
+    min-height: calc(100dvh - 160px);          /* 헤더/타이틀 여백 감안 */
+    padding: 60px 24px 64px;
+  }
+
+  .subway-station-detail-scope .detail-two-col{
+    max-width: clamp(1200px, 88vw, 1600px);    /* 넓은 화면에서 시원하게 */
+    gap: 32px;
+  }
+
+  .subway-station-detail-scope .detail-section{
+    flex: 1 1 48%;
+    min-height: 420px;                         /* 카드 덩어리도 더 커지게 */
+    padding: 18px;
+  }
+
+  .subway-station-detail-scope .detail-card{
+    font-size: 17px;                           /* 가독성 살짝 업 */
+  }
+  .detail-card > div:not(.detail-row){
+    padding: 12px 16px;
+  }
+  .direction-label{ font-size: 14px; }
+}
+
+/* 조금 더 큰 와이드 화면 */
+@media (min-width: 1440px){
+  .subway-station-detail-scope .detail-stage{
+    min-height: calc(100dvh - 150px);
+  }
+  .subway-station-detail-scope .detail-card{
+    font-size: 18px;
+  }
+}
+
+/* ===== 모바일(그대로 유지) ===== */
+@media (max-width: 667px){
+  .subway-station-detail-scope .detail-stage{ padding: 8px 12px 28px; }
+  .subway-station-detail-scope .detail-section{ flex: 1 1 100%; }
+  .subway-station-detail__title{ margin-top: 24px; margin-bottom: 36px; }
 }

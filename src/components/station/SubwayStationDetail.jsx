@@ -1,4 +1,3 @@
-// src/components/station/SubwayStationDetail.jsx
 import { useParams } from 'react-router-dom';
 import './SubwayStationDetail.css';
 import { useDispatch, useSelector } from 'react-redux';
@@ -167,71 +166,63 @@ function SubwayStationDetail() {
   }
 
   return (
-    <div className="subway-station-detail-scope">
-      <div className="detail-stage">
-        <div className="detail-root">
-          <div className="detail-switch">
-            <div className="detail-switch-center">
-              {lineNum && (
-                <span className="detail-switch-linebadge">
-                  {lineNum}
-                </span>
-              )}
-              <span className="detail-switch-current">
-                { stationNm || '역 이름 불러오는 중…' }
-              </span>
+    <div className="subway-station-detail-scope"> 
+      <div className="subway-station-detail__title">
+  <div className="detail-switch-center">
+        {lineNum && (
+          <span className="detail-switch-linebadge">
+            {lineNum}
+          </span>
+        )}
+        <span className="detail-switch-current">
+          { stationNm || '역 이름 불러오는 중…' }
+        </span>
+      </div>
+    </div>
+
+    <div className="detail-stage">
+      <div className="detail-root">
+        <div className="detail-two-col">
+          <section className="detail-section">
+            {/* 방면표시 */}
+            <div className='direction-label'>{upTrainLineName}</div>
+            <div className="detail-card">
+              {upArrivalInfo.length > 0 && upArrivalInfo.map(item => (
+                <div key={item.ordkey}>
+                  <div>
+                    {`${formatTrainLineNm(item.trainLineNm, 0)}`}
+                    <span className='detail-updn'>{`(${item.updnLine})`}</span>
+                    {` ${formatArrivalString(item.barvlDt)}`}
+                  </div>
+                </div>
+              ))}
+              <div className="detail-row"><h4>첫차</h4><p>{formatHHmmsstoHHss(upFirstLastTimesList[0]?.FSTT_HRM)}</p></div>
+              <div className="detail-row"><h4>막차</h4><p>{formatHHmmsstoHHss(upFirstLastTimesList[0]?.LSTTM_HRM)}</p></div>
             </div>
-          </div>
+          </section>
 
-          <div className="detail-two-col">
-            <section className="detail-section">
-              {/* 방면표시 */}
-              <div className='direction-label'>{upTrainLineName}</div> 
-              <div className="detail-card">
-                {
-                  upArrivalInfo.length > 0 && upArrivalInfo.map(item => {
-                    return (
-                      <div key={item.ordkey}>
-                        <div>
-                          {`${formatTrainLineNm(item.trainLineNm, 0)}`}
-                            <span className='detail-updn'>{`(${item.updnLine})`}</span>
-                          {` ${formatArrivalString(item.barvlDt)}`}
-                        </div>
-                      </div>
-                    )
-                  })
-                }
-                <div className="detail-row"><h4>첫차</h4><p>{formatHHmmsstoHHss(upFirstLastTimesList[0]?.FSTT_HRM)}</p></div>
-                <div className="detail-row"><h4>막차</h4><p>{formatHHmmsstoHHss(upFirstLastTimesList[0]?.LSTTM_HRM)}</p></div>
-              </div>
-            </section>
-
-            <section className="detail-section">
-              {/* 방면표시 */}
-              <div className='direction-label'>{downTrainLineName}</div>
-              <div className="detail-card">
-                {
-                  downArrivalInfo.length > 0 && downArrivalInfo.map(item => {
-                    return (
-                      <div key={item.ordkey}>
-                        <div>
-                          {`${formatTrainLineNm(item.trainLineNm, 0)}`}
-                            <span className='detail-updn'>{`(${item.updnLine})`}</span>
-                          {` ${formatArrivalString(item.barvlDt)}`}
-                        </div>
-                      </div>
-                    )
-                  })
-                }
-                <div className="detail-row"><h4>첫차</h4><p>{formatHHmmsstoHHss(downFirstLastTimesList[0]?.FSTT_HRM)}</p></div>
-                <div className="detail-row"><h4>막차</h4><p>{formatHHmmsstoHHss(downFirstLastTimesList[0]?.LSTTM_HRM)}</p></div>
-              </div>
-            </section>
-          </div>
+          <section className="detail-section">
+            {/* 방면표시 */}
+            <div className='direction-label'>{downTrainLineName}</div>
+            <div className="detail-card">
+              {downArrivalInfo.length > 0 && downArrivalInfo.map(item => (
+                <div key={item.ordkey}>
+                  <div>
+                    {`${formatTrainLineNm(item.trainLineNm, 0)}`}
+                    <span className='detail-updn'>{`(${item.updnLine})`}</span>
+                    {` ${formatArrivalString(item.barvlDt)}`}
+                  </div>
+                </div>
+              ))}
+              <div className="detail-row"><h4>첫차</h4><p>{formatHHmmsstoHHss(downFirstLastTimesList[0]?.FSTT_HRM)}</p></div>
+              <div className="detail-row"><h4>막차</h4><p>{formatHHmmsstoHHss(downFirstLastTimesList[0]?.LSTTM_HRM)}</p></div>
+            </div>
+          </section>
         </div>
       </div>
     </div>
-  );
+  </div>
+);
 }
 
 export default SubwayStationDetail;
