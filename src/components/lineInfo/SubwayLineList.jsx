@@ -36,7 +36,7 @@ export default function SubwayLineList() {
       const day = e;
       setDayTab(day);
       if (timeMeta.stnNm && timeMeta.lineNm) {
-        loadTimetable(timeMeta.lineNm, timeMeta.stnNm, day);
+        loadTimeTable(timeMeta.lineNm, timeMeta.stnNm, day);
       }
     }
   }
@@ -83,7 +83,7 @@ export default function SubwayLineList() {
     };
   }
 
-  function loadTimetable(lineNmClean, stnNmClean, wkndSe) {
+  function loadTimeTable(lineNmClean, stnNmClean, wkndSe) {
     setTimeLoading(true);
     setTimeError("");
 
@@ -127,7 +127,7 @@ export default function SubwayLineList() {
     if (activeTab === "search") {
       selectStation(item);
     } else {
-      loadTimetable(lineNmClean, stnNmClean, dayTab);
+      loadTimeTable(lineNmClean, stnNmClean, dayTab);
     }
   };
 
