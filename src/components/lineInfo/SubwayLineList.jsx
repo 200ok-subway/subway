@@ -11,7 +11,7 @@ import {
   dedupRows,
 } from "../../utils/subwaySearchUtils.js";
 import { useDispatch, useSelector } from "react-redux";
-import { getLineTimeTable } from "../../store/thunks/subwayLineTimetableThunk.js";
+import { getLineTimeTable } from "../../store/thunks/subwayLineTimeTableThunk.js";
 
 export default function SubwayLineList() {
   const dispatch = useDispatch();
