@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import './SubwayStationList.css';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { subwayStationIndex } from '../../store/thunks/subwayStationListThunk';
+import { subwayStationIndex } from '../../store/thunks/subwayStationListThunk.js';
 
 
 function SubwayStationList() {

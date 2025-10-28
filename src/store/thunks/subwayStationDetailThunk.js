@@ -11,7 +11,7 @@ const realtimeArrivalsIndex = createAsyncThunk(
       const { data } = await axios.get(url);
       return data.realtimeArrivalList;
     } catch(e) {
-      thunkAPI.rejectWithValue(e);
+      return thunkAPI.rejectWithValue(e);
     }
   }
 );
@@ -26,7 +26,7 @@ const upFirstLastTimesIndex = createAsyncThunk(
         
       return data.SearchFirstAndLastTrainbyLineServiceNew.row;
     } catch(e) {
-      thunkAPI.rejectWithValue(e);
+      return thunkAPI.rejectWithValue(e);
     }
   }
 );
@@ -41,7 +41,7 @@ const downFirstLastTimesIndex = createAsyncThunk(
         
       return data.SearchFirstAndLastTrainbyLineServiceNew.row;
     } catch(e) {
-      throw thunkAPI.rejectWithValue(e);
+      return thunkAPI.rejectWithValue(e);
     }
   }
 );
