@@ -2,7 +2,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import './SubwayStationList.css';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { subwayStationIndex } from '../../store/thunks/subwayStationListThunk';
+import { subwayStationIndex } from '../../store/thunks/subwayStationListThunk.js';
+
+
 function SubwayStationList() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -14,12 +16,14 @@ function SubwayStationList() {
   useEffect(() => {
     dispatch(subwayStationIndex());
   }, []);
+
+
 let filteredList = [];
-  if(Array.isArray(subwayList)){
+  if(subwayList){
     filteredList = subwayList.filter((item)=>{
-      const stationName = item.STATION_NM.toLocaleLowerCase();
+      const stationName = item.STATION_NM.trim();
       const lineNum = item.LINE_NUM.replace(/^0+/,'');
-      const searchText = search.toLocaleLowerCase();
+      const searchText = search.trim();
       return (stationName.includes(searchText)||lineNum.includes(searchText))
     })
   }

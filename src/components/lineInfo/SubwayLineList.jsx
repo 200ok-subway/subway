@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Map, MapMarker, CustomOverlayMap, useKakaoLoader } from "react-kakao-maps-sdk";
 import "./SubwayLineList.css";
@@ -43,38 +43,12 @@ export default function SubwayLineList() {
 
   const [coordinate, setCoordinate] = useState({ lat: 37.554648, lng: 126.970607 });
   const [markerItem, setMarkerItem] = useState(null);
-  const [map, setMap] = useState(null);
   const MAP_LEVEL = 5;
 
   function selectStation(item) {
     setMarkerItem(item);
     setCoordinate({ lat: Number(item.convY), lng: Number(item.convX) });
   }
-
-  useEffect(() => {
-    if (!map) return;
-    const onResize = () => {
-      try {
-        map.relayout();
-        const { kakao } = window;
-        if (kakao) map.setCenter(new kakao.maps.LatLng(coordinate.lat, coordinate.lng));
-      } catch {}
-    };
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, [map, coordinate]);
-
-  useEffect(() => {
-    if (!map || activeTab !== "search") return;
-    const t = setTimeout(() => {
-      try {
-        map.relayout();
-        const { kakao } = window;
-        if (kakao) map.setCenter(new kakao.maps.LatLng(coordinate.lat, coordinate.lng));
-      } catch {}
-    }, 0);
-    return () => clearTimeout(t);
-  }, [activeTab, map, coordinate]);
 
   const [dayTab, setDayTab] = useState("평일");
   const [timeMeta, setTimeMeta] = useState({ lineNm: "", stnNm: "" });
@@ -180,7 +154,7 @@ export default function SubwayLineList() {
             <button
               className={`subway-line-list-tab ${activeTab === "search" ? "active" : ""}`}
               onClick={() => setActiveTab("search")}
-            >
+            > 
               지하철역 검색
             </button>
             <button
@@ -221,11 +195,10 @@ export default function SubwayLineList() {
         <div className="subway-line-list-map">
           {activeTab === "search" && (
             <Map
+              id="map"
               center={coordinate}
               className="subway-line-list-map-inner"
               level={MAP_LEVEL}
-              onCreate={setMap}
-              isPanto
             >
               {markerItem && (
                 <>
