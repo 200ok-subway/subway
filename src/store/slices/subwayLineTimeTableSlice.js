@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getLineTimeTable } from "../thunks/subwayLineTimeTableThunk.js";
+import { getLineTimeTable } from "../thunks/subwayLineTimetableThunk.js";
 
 const initialState = {
   loading: false,

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import "./subwayLineDetail.css";
+import "./SubwayLineDetail.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";    
 import { getSubwayDetail } from "../../store/thunks/subwayLineDetailThunk.js";
